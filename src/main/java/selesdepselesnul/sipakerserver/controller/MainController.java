@@ -2,10 +2,7 @@ package selesdepselesnul.sipakerserver.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -78,11 +75,34 @@ public class MainController {
             parkingImageView.setOnMouseEntered(e -> {
                 PopOver popOver = new PopOver();
                 VBox layout = new VBox();
+
                 TextField memberIdTextField = new TextField();
                 memberIdTextField.setText(x.id + "");
-                memberIdTextField.setEditable(false);
-                HBox memberIdLayout = new HBox(new Label("Id Anggota : "), memberIdTextField);
-                layout.getChildren().add(memberIdLayout);
+                memberIdTextField.setDisable(true);
+                Label idLabel = new Label("Id Anggota    : ");
+                idLabel.setLabelFor(memberIdTextField);
+                HBox memberIdLayout = new HBox(idLabel, memberIdTextField);
+
+                TextField policeNumberTextField = new TextField();
+                policeNumberTextField.setText(x.policeNumber);
+                policeNumberTextField.setDisable(true);
+                Label policeNumberLabel = new Label("Nopol    :    ");
+                policeNumberLabel.setLabelFor(policeNumberTextField);
+                HBox policeNumberLayout = new HBox(policeNumberLabel, policeNumberTextField);
+
+                CheckBox availabilityCheckBox = new CheckBox();
+                Label availablilityLabel = new Label("Digunakan    :  ");
+                availablilityLabel.setLabelFor(availabilityCheckBox);
+
+                if(x.isAvailable) {
+                    availabilityCheckBox.setSelected(true);
+                    availablilityLabel.setText("Tersedia  :    ");
+                }
+
+                HBox availabilityLayout = new HBox(availablilityLabel, availabilityCheckBox);
+
+
+                layout.getChildren().setAll(memberIdLayout, policeNumberLayout, availabilityLayout);
                 popOver.setContentNode(layout);
                 popOver.show(parkingImageView);
             });
