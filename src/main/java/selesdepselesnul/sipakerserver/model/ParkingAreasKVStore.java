@@ -24,10 +24,6 @@ public class ParkingAreasKVStore implements ParkingAreas {
 
     private void updateSize(int newSize) {
         this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(newSize));
-//            HttpResponse<JsonNode> response = Unirest.put("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
-//                    + "/items/size").header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .body(String.valueOf(newSize))
-//                    .asJson();
     }
 
 
@@ -73,29 +69,18 @@ public class ParkingAreasKVStore implements ParkingAreas {
                 ));
     }
 
-//    private String getValue(String collectionName, String key) {
-//        try {
-//            return Unirest.get("https://kvstore.p.mashape.com/collections/" + collectionName
-//                    + "/items/" + key).header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .asJson().getBody().getObject().getString("value");
-//        } catch (UnirestException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
-
     @Override
     public int size() {
-        try {
-            HttpResponse<JsonNode> response = Unirest.get("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
-                    + "/items/size")
-                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-                    .asJson();
-            return response.getBody().getObject().getInt("value");
-        } catch (UnirestException e) {
-            return 0;
-        }
+        return Integer.valueOf(this.kvStoreManager.getValue(PARKING_AREAS_COLLECTION, "size").orElse("-1"));
+//        try {
+//            HttpResponse<JsonNode> response = Unirest.get("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
+//                    + "/items/size")
+//                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
+//                    .asJson();
+//            return response.getBody().getObject().getInt("value");
+//        } catch (UnirestException e) {
+//            return 0;
+//        }
     }
 
     @Override
@@ -117,43 +102,6 @@ public class ParkingAreasKVStore implements ParkingAreas {
         this.kvStoreManager.storeValue(parkingArea, "checkIn", "");
         this.kvStoreManager.storeValue(parkingArea, "checkOut", "");
     }
-
-//    private Optional<HttpResponse<JsonNode>> createCollection(String collectionName) {
-//        try {
-//            return Optional.of(Unirest.post("https://kvstore.p.mashape.com/collections")
-//                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .header("Content-Type", "application/json")
-//                    .header("Accept", "application/json")
-//                    .body("{\"collection\":\"" + collectionName + "\"}")
-//                    .asJson());
-//        } catch (UnirestException e) {
-//            e.printStackTrace();
-//        }
-//        return Optional.empty();
-//    }
-
-//    private Optional<HttpResponse<JsonNode>> storeValue(String collectionName, String key, String value) {
-//        try {
-//            return Optional.of(Unirest.put("https://kvstore.p.mashape.com/collections/" + collectionName
-//                    + "/items/" + key).header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .body(value)
-//                    .asJson());
-//        } catch (UnirestException e) {
-//            e.printStackTrace();
-//        }
-//        return Optional.empty();
-//    }
-
-//    private Optional<HttpResponse<JsonNode>> deleteCollection(String collectionName) {
-//        try {
-//            return Optional.of(Unirest.delete("https://kvstore.p.mashape.com/collections/" + collectionName)
-//                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .asJson());
-//        } catch (UnirestException e) {
-//            e.printStackTrace();
-//        }
-//        return Optional.empty();
-//    }
 
     @Override
     public void dropAll() {
