@@ -23,6 +23,8 @@
         </ScrollPane>
       <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
+            <Button fx:id="increasingParkingSizeButton" mnemonicParsing="false" text="+" />
+            <Button fx:id="decreasingParkingSizeButton" mnemonicParsing="false" text="-" />
             <ComboBox fx:id="displayedModeComboBox" prefHeight="26.0" prefWidth="187.0" />
             <TextField visible="false" />
          </children>
