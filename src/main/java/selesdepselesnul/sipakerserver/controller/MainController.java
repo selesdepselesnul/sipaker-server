@@ -72,7 +72,7 @@ public class MainController {
                 image = Resource.Image.lock;
             }
             final ImageView parkingImageView = new ImageView(new Image(image));
-            parkingImageView.setOnMouseEntered(e -> {
+            parkingImageView.setOnMouseClicked(e -> {
                 PopOver popOver = new PopOver();
 
                 VBox mainLayout = new VBox();
@@ -80,22 +80,28 @@ public class MainController {
                 TextField memberIdTextField = new TextField();
                 memberIdTextField.setText(x.id + "");
                 memberIdTextField.setDisable(true);
-                Label idLabel = new Label("Id Anggota    : ");
+                Label idLabel = new Label("No.Id  : ");
                 idLabel.setLabelFor(memberIdTextField);
                 HBox memberIdLayout = new HBox(idLabel, memberIdTextField);
 
                 TextField policeNumberTextField = new TextField();
                 policeNumberTextField.setText(x.policeNumber);
                 policeNumberTextField.setDisable(true);
-                Label policeNumberLabel = new Label("Nopol    :    ");
+                Label policeNumberLabel = new Label("Nopol  : ");
                 policeNumberLabel.setLabelFor(policeNumberTextField);
                 HBox policeNumberLayout = new HBox(policeNumberLabel, policeNumberTextField);
 
                 TextField checkInTextField = new TextField(x.checkIn);
                 checkInTextField.setDisable(true);
-                Label checkInLabel = new Label("Masuk : ");
+                Label checkInLabel = new Label("Masuk  : ");
                 checkInLabel.setLabelFor(checkInTextField);
                 HBox checkInLayout = new HBox(checkInLabel, checkInTextField);
+
+                TextField checkOutTextField = new TextField(x.checkOut);
+                checkOutTextField.setDisable(true);
+                Label checkOutLabel = new Label("Keluar : ");
+                checkOutLabel.setLabelFor(checkOutTextField);
+                HBox checkOutLayout = new HBox(checkOutLabel, checkOutTextField);
 
                 Button readyButton = new Button();
                 readyButton.setOnAction(actionEvent -> {
@@ -114,15 +120,15 @@ public class MainController {
                         readyButton.setText("Mulai");
                     }
                 });
+
                 if(x.isAvailable) {
                     readyButton.setText("Mulai");
                 } else {
                     readyButton.setText("Selesai");
                 }
 
-
-
-                mainLayout.getChildren().setAll(memberIdLayout, policeNumberLayout, checkInLayout, readyButton);
+                mainLayout.getChildren().setAll(memberIdLayout, policeNumberLayout, checkInLayout, checkOutLayout,
+                        readyButton);
                 popOver.setContentNode(mainLayout);
                 popOver.show(parkingImageView);
             });
