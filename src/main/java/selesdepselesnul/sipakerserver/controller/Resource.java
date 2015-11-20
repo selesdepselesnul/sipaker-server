@@ -1,6 +1,5 @@
 package selesdepselesnul.sipakerserver.controller;
 
-import java.io.InputStream;
 import java.net.URL;
 
 public class Resource {
@@ -10,12 +9,8 @@ public class Resource {
     }
 
     public static class Image {
-        public static InputStream lock() {
-            return ClassLoader.getSystemResourceAsStream("image/lock.png");
-        }
+        public static final String lock = "image/lock.png";
 
-        public static InputStream unlock() {
-            return ClassLoader.getSystemResourceAsStream("image/unlock.png");
-        }
+        public static final String unlock = "image/unlock.png";
     }
 }

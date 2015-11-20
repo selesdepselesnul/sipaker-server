@@ -19,7 +19,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         try {
             FXMLLoader mainLayoutLoader = new FXMLLoader();
             GridPane mainLayout = mainLayoutLoader.load(Resource.Ui.MAIN_LAYOUT);

@@ -1,15 +1,14 @@
 package selesdepselesnul.sipakerserver.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -22,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -70,24 +70,19 @@ public class MainController implements Initializable {
 
 
     private void makeParkingAreas() {
-        List<VBox> parkingAreasVboxList = IntStream.rangeClosed(1, this.parkingAreas.size()).mapToObj(
-                i -> {
-
-                    Image image = new Image(Resource.Image.unlock());
-                    final Optional<ParkingArea> parkingAreaOptional = this.parkingAreas.get(i);
-                    System.out.println(i + " status is = " + parkingAreaOptional.get().isAvailable);
-                    if (parkingAreaOptional.isPresent()) {
-                        if (!parkingAreaOptional.get().isAvailable) {
-                            image = new Image(Resource.Image.lock());
-                        }
-                    }
-                    ImageView imageView = new ImageView(image);
-                    imageView.setFitHeight(80);
-                    imageView.setFitWidth(80);
-                    VBox parkingAreaVBox = new VBox(imageView, new Text(String.valueOf(i)));
-                    return parkingAreaVBox;
-                }
-        ).collect(Collectors.toList());
-        parkingAreaFlowPane.getChildren().setAll(parkingAreasVboxList);
+        this.parkingAreaFlowPane.getChildren().clear();
+        this.parkingAreas.stream().forEach(x -> {
+            String image = Resource.Image.unlock;
+            if (!x.isAvailable) {
+                image = Resource.Image.lock;
+            }
+            final ImageView parkingImageView = new ImageView(new Image(image));
+            parkingImageView.setFitHeight(80);
+            parkingImageView.setFitWidth(80);
+            parkingImageView.setCursor(Cursor.CLOSED_HAND);
+            final Text parkingAreaIdText = new Text(String.valueOf(x.id));
+            parkingAreaIdText.setCursor(Cursor.CLOSED_HAND);
+            parkingAreaFlowPane.getChildren().add(new VBox(parkingImageView, parkingAreaIdText));
+        });
     }
 }
