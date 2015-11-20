@@ -2,11 +2,13 @@ package selesdepselesnul.sipakerserver;
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import selesdepselesnul.sipakerserver.controller.MainController;
 import selesdepselesnul.sipakerserver.controller.Resource;
 
 import java.io.IOException;
@@ -20,8 +22,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader mainLayoutLoader = new FXMLLoader();
-            GridPane mainLayout = mainLayoutLoader.load(Resource.Ui.MAIN_LAYOUT);
+            FXMLLoader mainLayoutLoader = new FXMLLoader(Resource.Ui.MAIN_LAYOUT);
+            GridPane mainLayout = mainLayoutLoader.load();
+            MainController mainController = mainLayoutLoader.getController();
+            mainController.setMainStage(primaryStage);
             primaryStage.setScene(new Scene(mainLayout));
             primaryStage.show();
         } catch (IOException e) {
