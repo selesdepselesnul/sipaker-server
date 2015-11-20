@@ -13,6 +13,10 @@ import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -61,6 +65,14 @@ public class MainController {
         };
         this.increasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.increase()));
         this.decreasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.decerease()));
+
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("I'm working !");
+            }
+        }, 1000l, 1000l);
     }
 
 
@@ -105,12 +117,12 @@ public class MainController {
 
                 Button readyButton = new Button();
                 readyButton.setOnAction(actionEvent -> {
-                    Button button = (Button)actionEvent.getSource();
+                    Button button = (Button) actionEvent.getSource();
                     if (button.getText().equals("Mulai")) {
                         memberIdTextField.setDisable(false);
                         policeNumberTextField.setDisable(false);
                         readyButton.setText("Simpan");
-                    } else if(readyButton.getText().equals("Simpan")) {
+                    } else if (readyButton.getText().equals("Simpan")) {
                         memberIdTextField.setDisable(true);
                         policeNumberTextField.setDisable(true);
                         readyButton.setText("Selesai");
@@ -121,7 +133,7 @@ public class MainController {
                     }
                 });
 
-                if(x.isAvailable) {
+                if (x.isAvailable) {
                     readyButton.setText("Mulai");
                 } else {
                     readyButton.setText("Selesai");
