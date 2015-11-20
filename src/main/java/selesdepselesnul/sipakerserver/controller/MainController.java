@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
+import selesdepselesnul.sipakerserver.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
@@ -27,9 +28,6 @@ public class MainController {
     private FlowPane parkingAreaFlowPane;
 
     @FXML
-    final private ParkingAreas parkingAreas = new ParkingAreasKVStore();
-
-    @FXML
     private Button increasingParkingSizeButton;
 
     @FXML
@@ -37,7 +35,10 @@ public class MainController {
 
     @FXML
     private ComboBox<Runnable> displayedParkingAreasModeComboBox;
+
     private Stage primaryStage;
+
+    final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
 
     public void setMainStage(Stage primaryStage) {
         this.primaryStage = primaryStage;

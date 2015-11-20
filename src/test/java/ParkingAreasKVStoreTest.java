@@ -1,3 +1,4 @@
+import selesdepselesnul.sipakerserver.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
 /**
@@ -5,6 +6,6 @@ import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
  */
 public class ParkingAreasKVStoreTest {
     public static void main(String[] args) {
-        new ParkingAreasKVStore().stream().forEach(System.out::println);
+        new ParkingAreasKVStore(new KVStoreManager()).dropAll();
     }
 }
