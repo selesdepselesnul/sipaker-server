@@ -1,12 +1,13 @@
-package selesdepselesnul.sipakerserver;/**
- * Created by morrisseymarr on 11/20/15.
+package selesdepselesnul.sipakerserver;
+/**
+ * @author Moch Deden (https://github.com/selesdepselesnul)
  */
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import selesdepselesnul.sipakerserver.controller.Resource;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class Main extends Application {
 
         try {
             FXMLLoader mainLayoutLoader = new FXMLLoader();
-            GridPane mainLayout = mainLayoutLoader.load(ClassLoader.getSystemResource("fxml/main.fxml"));
+            GridPane mainLayout = mainLayoutLoader.load(Resource.Ui.MAIN_LAYOUT);
             primaryStage.setScene(new Scene(mainLayout));
             primaryStage.show();
         } catch (IOException e) {
