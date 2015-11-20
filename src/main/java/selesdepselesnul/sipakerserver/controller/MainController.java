@@ -74,7 +74,8 @@ public class MainController {
             final ImageView parkingImageView = new ImageView(new Image(image));
             parkingImageView.setOnMouseEntered(e -> {
                 PopOver popOver = new PopOver();
-                VBox layout = new VBox();
+
+                VBox mainLayout = new VBox();
 
                 TextField memberIdTextField = new TextField();
                 memberIdTextField.setText(x.id + "");
@@ -90,6 +91,11 @@ public class MainController {
                 policeNumberLabel.setLabelFor(policeNumberTextField);
                 HBox policeNumberLayout = new HBox(policeNumberLabel, policeNumberTextField);
 
+                TextField checkInTextField = new TextField(x.checkIn);
+                checkInTextField.setDisable(true);
+                Label checkInLabel = new Label("Masuk : ");
+                checkInLabel.setLabelFor(checkInTextField);
+                HBox checkInLayout = new HBox(checkInLabel, checkInTextField);
 
                 Button readyButton = new Button();
                 readyButton.setOnAction(actionEvent -> {
@@ -116,8 +122,8 @@ public class MainController {
 
 
 
-                layout.getChildren().setAll(memberIdLayout, policeNumberLayout, readyButton);
-                popOver.setContentNode(layout);
+                mainLayout.getChildren().setAll(memberIdLayout, policeNumberLayout, checkInLayout, readyButton);
+                popOver.setContentNode(mainLayout);
                 popOver.show(parkingImageView);
             });
             parkingImageView.setFitHeight(80);

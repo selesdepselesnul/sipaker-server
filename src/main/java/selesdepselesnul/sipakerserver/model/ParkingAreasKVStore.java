@@ -51,7 +51,9 @@ public class ParkingAreasKVStore implements ParkingAreas {
                         id,
                         Boolean.getBoolean(getValue(parkingArea, "isAvailable")),
                         Integer.valueOf(getValue(parkingArea, "memberId")),
-                        getValue(parkingArea, "policeNumber"))
+                        getValue(parkingArea, "policeNumber"),
+                        getValue(parkingArea, "checkIn"),
+                        getValue(parkingArea, "checkOut"))
         );
     }
 
@@ -62,7 +64,9 @@ public class ParkingAreasKVStore implements ParkingAreas {
                         i,
                         Boolean.parseBoolean(getValue(PARKING_AREA + i, "isAvailable")),
                         Integer.valueOf(getValue(PARKING_AREA + i, "memberId")),
-                        getValue(PARKING_AREA + i, "policeNumber")
+                        getValue(PARKING_AREA + i, "policeNumber"),
+                        getValue(PARKING_AREA + i, "checkIn"),
+                        getValue(PARKING_AREA + i, "checkOut")
                 ));
     }
 
@@ -107,6 +111,8 @@ public class ParkingAreasKVStore implements ParkingAreas {
         storeValue(parkingArea, "isAvailable", "true");
         storeValue(parkingArea, "memberId", "-1");
         storeValue(parkingArea, "policeNumber", "");
+        storeValue(parkingArea, "checkIn", "");
+        storeValue(parkingArea, "checkOut", "");
 
     }
 

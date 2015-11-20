@@ -1,16 +1,20 @@
 package selesdepselesnul.sipakerserver.model;
 
 public class ParkingArea {
+    public final int id;
     public final boolean isAvailable;
     public final int memberId;
     public final String policeNumber;
-    public final int id;
+    public final String checkIn;
+    public final String checkOut;
 
-    ParkingArea(int id, boolean isAvaliable, int memberId, String policeNumber) {
+    ParkingArea(int id, boolean isAvailable, int memberId, String policeNumber, String checkIn, String checkOut) {
         this.id = id;
-        this.isAvailable = isAvaliable;
+        this.isAvailable = isAvailable;
         this.memberId = memberId;
         this.policeNumber = policeNumber;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
     }
 
     @Override
@@ -20,6 +24,8 @@ public class ParkingArea {
                 ", isAvailable=" + isAvailable +
                 ", memberId=" + memberId +
                 ", policeNumber='" + policeNumber + '\'' +
+                ", checkIn='" + checkIn + '\'' +
+                ", checkOut='" + checkOut + '\'' +
                 '}';
     }
 }
