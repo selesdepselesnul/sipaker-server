@@ -1,5 +1,6 @@
 package selesdepselesnul.sipakerserver.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
@@ -70,7 +71,10 @@ public class MainController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("I'm working !");
+                Platform.runLater(() -> {
+                            System.out.println("I'm working !");
+                        }
+                );
             }
         }, 1000l, 1000l);
     }
