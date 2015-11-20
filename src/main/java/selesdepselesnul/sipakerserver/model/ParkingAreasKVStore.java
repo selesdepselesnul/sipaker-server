@@ -23,14 +23,11 @@ public class ParkingAreasKVStore implements ParkingAreas {
     }
 
     private void updateSize(int newSize) {
-        try {
-            HttpResponse<JsonNode> response = Unirest.put("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
-                    + "/items/size").header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-                    .body(String.valueOf(newSize))
-                    .asJson();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
+        this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(newSize));
+//            HttpResponse<JsonNode> response = Unirest.put("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
+//                    + "/items/size").header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
+//                    .body(String.valueOf(newSize))
+//                    .asJson();
     }
 
 

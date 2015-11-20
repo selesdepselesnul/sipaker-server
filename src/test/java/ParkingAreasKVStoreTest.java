@@ -6,6 +6,6 @@ import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
  */
 public class ParkingAreasKVStoreTest {
     public static void main(String[] args) {
-        new ParkingAreasKVStore(new KVStoreManager()).dropAll();
+        new ParkingAreasKVStore(new KVStoreManager()).create(3);
     }
 }
