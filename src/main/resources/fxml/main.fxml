@@ -4,24 +4,28 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-          prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.51"
-          fx:controller="selesdepselesnul.sipakerserver.controller.MainController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="selesdepselesnul.sipakerserver.controller.MainController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="334.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="10.0" prefWidth="109.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="334.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="10.0" prefWidth="109.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="221.0" minHeight="10.0" prefHeight="221.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="90.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="247.0" minHeight="10.0" prefHeight="201.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <ScrollPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <ScrollPane prefHeight="196.0" prefWidth="334.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <content>
-                <FlowPane fx:id="parkingAreaFlowPane" prefHeight="219.0" prefWidth="335.0"/>
+                <FlowPane fx:id="parkingAreaFlowPane" />
             </content>
         </ScrollPane>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <ComboBox fx:id="displayedModeComboBox" prefHeight="26.0" prefWidth="187.0" />
+            <TextField visible="false" />
+         </children>
+      </HBox>
     </children>
 </GridPane>
