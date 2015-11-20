@@ -6,7 +6,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -31,13 +30,17 @@ public class ParkingAreasKVStore implements ParkingAreas {
 
     @Override
     public void increase() {
-        updateSize(this.size() + 1);
+        final int nextSize = this.size() + 1;
+        createDefaultParkingArea(nextSize);
+        updateSize(nextSize);
     }
 
 
     @Override
     public void decerease() {
-        updateSize(this.size() - 1);
+        final int currentSize = this.size();
+        deleteCollection(PARKING_AREA + currentSize);
+        updateSize(currentSize - 1);
     }
 
     @Override
@@ -91,16 +94,20 @@ public class ParkingAreasKVStore implements ParkingAreas {
     @Override
     public void create(int size) {
         IntStream.rangeClosed(1, size).forEachOrdered(i -> {
-            final String parkingArea = PARKING_AREA + i;
-            createCollection(parkingArea);
-            storeValue(parkingArea, "id", String.valueOf(i));
-            storeValue(parkingArea, "isAvailable", "true");
-            storeValue(parkingArea, "memberId", "-1");
-            storeValue(parkingArea, "policeNumber", "");
+            createDefaultParkingArea(i);
         });
-
         createCollection(PARKING_AREAS_COLLECTION);
         storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(size));
+    }
+
+    private void createDefaultParkingArea(int id) {
+        final String parkingArea = PARKING_AREA + id;
+        createCollection(parkingArea);
+        storeValue(parkingArea, "id", String.valueOf(id));
+        storeValue(parkingArea, "isAvailable", "true");
+        storeValue(parkingArea, "memberId", "-1");
+        storeValue(parkingArea, "policeNumber", "");
+
     }
 
     private Optional<HttpResponse<JsonNode>> createCollection(String collectionName) {
