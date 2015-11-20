@@ -92,11 +92,28 @@ public class MainController {
 
 
                 Button readyButton = new Button();
+                readyButton.setOnAction(actionEvent -> {
+                    Button button = (Button)actionEvent.getSource();
+                    if (button.getText().equals("Mulai")) {
+                        memberIdTextField.setDisable(false);
+                        policeNumberTextField.setDisable(false);
+                        readyButton.setText("Simpan");
+                    } else if(readyButton.getText().equals("Simpan")) {
+                        memberIdTextField.setDisable(true);
+                        policeNumberTextField.setDisable(true);
+                        readyButton.setText("Selesai");
+                        parkingImageView.setImage(new Image(Resource.Image.lock));
+                    } else {
+                        parkingImageView.setImage(new Image(Resource.Image.unlock));
+                        readyButton.setText("Mulai");
+                    }
+                });
                 if(x.isAvailable) {
                     readyButton.setText("Mulai");
                 } else {
                     readyButton.setText("Selesai");
                 }
+
 
 
                 layout.getChildren().setAll(memberIdLayout, policeNumberLayout, readyButton);
