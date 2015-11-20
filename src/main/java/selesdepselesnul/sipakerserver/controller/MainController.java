@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import selesdepselesnul.sipakerserver.model.ParkingAreas;
+import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
 import java.net.URL;
 import java.util.List;
@@ -21,13 +23,17 @@ public class MainController implements Initializable {
     @FXML
     private FlowPane parkingAreaFlowPane;
 
+    @FXML
+    private ParkingAreas parkingAreas;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        parkingAreaFlowPane.getChildren().addAll(makeParkingAreaItems());
+        parkingAreas = new ParkingAreasKVStore();
+        parkingAreaFlowPane.getChildren().addAll(makeParkingAreaVBoxList(parkingAreas.size()));
     }
 
-    private List<VBox> makeParkingAreaItems() {
-        return IntStream.rangeClosed(1, 100).mapToObj(
+    private List<VBox> makeParkingAreaVBoxList(int size) {
+        return IntStream.rangeClosed(1, size).mapToObj(
                 i -> {
                     ImageView imageView = new ImageView(new Image(Resource.Image.lock()));
                     imageView.setFitHeight(80);
