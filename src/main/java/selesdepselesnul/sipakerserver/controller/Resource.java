@@ -13,5 +13,9 @@ public class Resource {
         public static InputStream lock() {
             return ClassLoader.getSystemResourceAsStream("image/lock.png");
         }
+
+        public static InputStream unlock() {
+            return ClassLoader.getSystemResourceAsStream("image/unlock.png");
+        }
     }
 }

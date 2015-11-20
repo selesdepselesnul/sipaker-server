@@ -5,6 +5,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import java.util.Optional;
+
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
@@ -32,6 +34,20 @@ public class ParkingAreasKVStore implements ParkingAreas {
     @Override
     public void decerease() {
         updateSize(this.size() - 1);
+    }
+
+    @Override
+    public Optional<ParkingArea> get(int id) {
+        try {
+            HttpResponse<JsonNode> response = Unirest.get("https://kvstore.p.mashape.com/collections/Parking" + id
+                    + "/items/isAvailable")
+                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
+                    .asJson();
+            return Optional.of(new ParkingArea(response.getBody().getObject().getBoolean("value")));
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @Override

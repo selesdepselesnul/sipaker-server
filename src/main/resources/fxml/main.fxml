@@ -25,7 +25,7 @@
          <children>
             <Button fx:id="increasingParkingSizeButton" mnemonicParsing="false" text="+" />
             <Button fx:id="decreasingParkingSizeButton" mnemonicParsing="false" text="-" />
-            <ComboBox fx:id="displayedModeComboBox" prefHeight="26.0" prefWidth="187.0" />
+            <ComboBox fx:id="displayedParkingAreasModeComboBox" prefHeight="26.0" prefWidth="331.0" />
             <TextField visible="false" />
          </children>
       </HBox>
