@@ -90,19 +90,16 @@ public class MainController {
                 policeNumberLabel.setLabelFor(policeNumberTextField);
                 HBox policeNumberLayout = new HBox(policeNumberLabel, policeNumberTextField);
 
-                CheckBox availabilityCheckBox = new CheckBox();
-                Label availablilityLabel = new Label("Digunakan    :  ");
-                availablilityLabel.setLabelFor(availabilityCheckBox);
 
+                Button readyButton = new Button();
                 if(x.isAvailable) {
-                    availabilityCheckBox.setSelected(true);
-                    availablilityLabel.setText("Tersedia  :    ");
+                    readyButton.setText("Mulai");
+                } else {
+                    readyButton.setText("Selesai");
                 }
 
-                HBox availabilityLayout = new HBox(availablilityLabel, availabilityCheckBox);
 
-
-                layout.getChildren().setAll(memberIdLayout, policeNumberLayout, availabilityLayout);
+                layout.getChildren().setAll(memberIdLayout, policeNumberLayout, readyButton);
                 popOver.setContentNode(layout);
                 popOver.show(parkingImageView);
             });
