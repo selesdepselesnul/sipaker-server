@@ -2,10 +2,10 @@ import selesdepselesnul.sipakerserver.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
 /**
- * Created by morrisseymarr on 11/20/15.
+ * @author Moch Deden (https://github.com/selesdepselesnul)
  */
 public class ParkingAreasKVStoreTest {
     public static void main(String[] args) {
-        new ParkingAreasKVStore(new KVStoreManager()).create(3);
+        new ParkingAreasKVStore(new KVStoreManager()).stream().forEach(System.out::println);
     }
 }

@@ -1,9 +1,5 @@
 package selesdepselesnul.sipakerserver.model;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import selesdepselesnul.sipakerserver.KVStoreManager;
 
 import java.util.Optional;
@@ -72,22 +68,11 @@ public class ParkingAreasKVStore implements ParkingAreas {
     @Override
     public int size() {
         return Integer.valueOf(this.kvStoreManager.getValue(PARKING_AREAS_COLLECTION, "size").orElse("-1"));
-//        try {
-//            HttpResponse<JsonNode> response = Unirest.get("https://kvstore.p.mashape.com/collections/" + PARKING_AREAS_COLLECTION
-//                    + "/items/size")
-//                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-//                    .asJson();
-//            return response.getBody().getObject().getInt("value");
-//        } catch (UnirestException e) {
-//            return 0;
-//        }
     }
 
     @Override
     public void create(int size) {
-        IntStream.rangeClosed(1, size).forEachOrdered(i -> {
-            createDefaultParkingArea(i);
-        });
+        IntStream.rangeClosed(1, size).forEachOrdered(this::createDefaultParkingArea);
         this.kvStoreManager.createCollection(PARKING_AREAS_COLLECTION);
         this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(size));
     }
