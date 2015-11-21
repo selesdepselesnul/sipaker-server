@@ -48,6 +48,9 @@ public class MainController {
     @FXML
     private ComboBox<String> filteringByPatternComboBox;
 
+    @FXML
+    private Button memberRequestQueueButton;
+
     private Stage primaryStage;
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
@@ -78,7 +81,7 @@ public class MainController {
             makeParkingAreas(p -> p.isAvailable);
         }
 
-          @Override
+        @Override
         public String toString() {
             return "Kosong";
         }
@@ -124,8 +127,19 @@ public class MainController {
             x.run();
             makeParkingAreas(p -> true);
         };
-        this.increasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.increase()));
-        this.decreasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.decrease()));
+        this.increasingParkingSizeButton.setOnAction(e -> updateSize.accept(() -> this.parkingAreas.increase()));
+        this.decreasingParkingSizeButton.setOnAction(e -> updateSize.accept(() -> this.parkingAreas.decrease()));
+        this.memberRequestQueueButton.setOnAction(e -> {
+            try {
+                PopOver popOver = new PopOver();
+                FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_REQUEST_QUEUE_LAYOUT);
+                AnchorPane memberRequestQueueLayout = fxmlLoader.load();
+                popOver.setContentNode(memberRequestQueueLayout);
+                popOver.show(memberRequestQueueButton);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {

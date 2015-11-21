@@ -42,5 +42,6 @@
             <TextField fx:id="patternTextField" prefHeight="26.0" prefWidth="178.0" visible="false" />
          </children>
       </GridPane>
+      <Button fx:id="memberRequestQueueButton" mnemonicParsing="false" text="antrian req anggota" GridPane.columnIndex="1" />
     </children>
 </GridPane>

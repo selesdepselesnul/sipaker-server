@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="337.0" prefWidth="489.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView layoutX="64.0" layoutY="37.0" prefHeight="225.0" prefWidth="381.0">
+        <columns>
+          <TableColumn prefWidth="111.0" text="No. Antrian" />
+          <TableColumn prefWidth="107.0" text="Id Anggota" />
+            <TableColumn prefWidth="162.0" text="Waktu Request" />
+        </columns>
+      </TableView>
+      <ComboBox layoutX="64.0" layoutY="273.0" prefHeight="26.0" prefWidth="184.0" promptText="Nomor Parkir Area" />
+   </children>
+</AnchorPane>
