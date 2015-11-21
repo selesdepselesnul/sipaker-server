@@ -16,4 +16,5 @@ public interface ParkingAreas {
     void create(int size);
     void dropAll();
     void update(ParkingArea parkingArea);
+    void log(ParkingArea parkingArea);
 }

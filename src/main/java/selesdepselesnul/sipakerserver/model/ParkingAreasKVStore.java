@@ -92,6 +92,7 @@ public class ParkingAreasKVStore implements ParkingAreas {
         this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.checkOut);
     }
 
+    @Override
     public void log(ParkingArea parkingArea) {
         final String parkingAreaLog = PARKING_AREA + parkingArea.id + parkingArea.checkIn;
         this.kvStoreManager.createCollection(parkingAreaLog);

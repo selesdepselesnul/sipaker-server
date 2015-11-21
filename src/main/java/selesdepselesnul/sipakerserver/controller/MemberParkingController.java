@@ -7,12 +7,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import selesdepselesnul.sipakerserver.DateTimeParser;
 import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.model.MemberParkings;
 import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
+import selesdepselesnul.sipakerserver.model.MemberParkingsKVStore;
 
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
@@ -35,6 +36,7 @@ public class MemberParkingController {
 
 
     final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
+    final private MemberParkings parkingAreasLogs = new MemberParkingsKVStore(new KVStoreManager());
     private ImageView parkingAreaImageView;
     private ParkingArea parkingArea;
 //    private int parkingAreaId;
@@ -92,8 +94,9 @@ public class MemberParkingController {
                 DateTimeParser.toUrlFriendly(checkInTextField.getText()),
                 DateTimeParser.toUrlFriendly(checkOutTextField.getText())
         );
-        parkingAreasKVStore.store(parkingArea);
-        parkingAreasKVStore.log(parkingArea);
+        this.parkingAreasKVStore.store(parkingArea);
+        this.parkingAreasLogs.store(parkingArea);
+//        parkingAreasKVStore.log(parkingArea);
         System.out.println("Status of parking Area = " + parkingArea);
     }
 

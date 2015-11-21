@@ -113,9 +113,9 @@ public class MainController {
             FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
             AnchorPane contentNode = fxmlLoader.load();
             MemberParkingController memberParkingController = fxmlLoader.getController();
-             final ParkingArea parkingArea = this.parkingAreas.get(
-                        Integer.parseInt(parkingAreaImageView.getId())
-                    ).get();
+            final ParkingArea parkingArea = this.parkingAreas.get(
+                    Integer.parseInt(parkingAreaImageView.getId())
+            ).get();
             memberParkingController.setParkingArea(parkingArea);
             System.out.println("Selected ParkingArea = " + parkingArea);
             memberParkingController.setParkingAreaImageView(parkingAreaImageView);
