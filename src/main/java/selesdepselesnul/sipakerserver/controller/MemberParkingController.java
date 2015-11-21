@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import selesdepselesnul.sipakerserver.DateTimeParser;
 import selesdepselesnul.sipakerserver.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
@@ -33,8 +34,7 @@ public class MemberParkingController {
     private Button readyButton;
 
 
-    private static final DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
-    private static final DateTimeFormatter DATE_TIME_FORMATER_URL_FRIENDLY = DateTimeFormatter.ofPattern("HHmmssddMMyyyy");
+
     private ImageView parkingAreaImageView;
     private int parkingAreaId;
     final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
@@ -47,7 +47,7 @@ public class MemberParkingController {
             Button button = (Button) actionEvent.getSource();
             if (button.getText().equals("Mulai")) {
                 checkInTextField.setDisable(false);
-                checkInTextField.setText(LocalDateTime.now().format(DATE_TIME_FORMATER));
+                checkInTextField.setText(LocalDateTime.now().format(DateTimeParser.D_T_FORMATTER_READABLE));
                 checkInTextField.setDisable(true);
                 memberIdTextField.setDisable(false);
                 policeNumberTextField.setDisable(false);
@@ -59,7 +59,7 @@ public class MemberParkingController {
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.lock));
                 updateParkingArea(false);
             } else {
-                checkOutTextField.setText(LocalDateTime.now().format(DATE_TIME_FORMATER));
+                checkOutTextField.setText(LocalDateTime.now().format(DateTimeParser.D_T_FORMATTER_READABLE));
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.unlock));
                 readyButton.setText("Mulai");
                 updateParkingArea(true);
@@ -78,15 +78,14 @@ public class MemberParkingController {
     private void updateParkingArea(boolean isAvailable) {
         String checkOut = "";
         if (isAvailable)
-            checkOut = LocalDateTime.parse(checkOutTextField.getText(), DATE_TIME_FORMATER)
-                    .format(DATE_TIME_FORMATER_URL_FRIENDLY);
+            checkOut = DateTimeParser.toUrlFriendly(checkInTextField.getText());
 
         final ParkingArea parkingArea = new ParkingArea(
                 parkingAreaId,
                 isAvailable,
                 Integer.parseInt(memberIdTextField.getText()),
                 policeNumberTextField.getText(),
-                LocalDateTime.parse(checkInTextField.getText(), DATE_TIME_FORMATER).format(DATE_TIME_FORMATER_URL_FRIENDLY),
+                DateTimeParser.toUrlFriendly(checkInTextField.getText()),
                 checkOut
         );
         parkingAreasKVStore.store(parkingArea);
