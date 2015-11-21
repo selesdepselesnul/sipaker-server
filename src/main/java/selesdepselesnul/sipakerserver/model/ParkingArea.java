@@ -23,10 +23,6 @@ public class ParkingArea {
 
     @Override
     public String toString() {
-        return "ParkingArea{" +
-                "id=" + id +
-                ", isAvailable=" + isAvailable +
-                ", memberParking=" + memberParking +
-                '}';
+        return this.id + "";
     }
 }

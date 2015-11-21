@@ -140,7 +140,7 @@ public class MainController implements Initializable{
                 FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_REQUEST_QUEUE_LAYOUT);
                 AnchorPane memberRequestQueueLayout = fxmlLoader.load();
                 MemberRequestQueueController memberRequestQueueController = fxmlLoader.getController();
-                memberRequestQueueController.setParkingAreas(inMemoryParkingAreas);
+                memberRequestQueueController.setParkingAreasStream(parkingAreas.stream().filter(p -> p.isAvailable));
                 popOver.setContentNode(memberRequestQueueLayout);
                 popOver.show(memberRequestQueueButton);
             } catch (IOException e1) {

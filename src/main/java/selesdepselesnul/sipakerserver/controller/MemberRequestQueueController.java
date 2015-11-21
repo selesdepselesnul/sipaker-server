@@ -12,6 +12,7 @@ import selesdepselesnul.sipakerserver.model.ParkingArea;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
@@ -30,12 +31,12 @@ public class MemberRequestQueueController {
     private TableColumn<MemberRequest, String> requestTimeTableColumn;
 
     @FXML
-    private ComboBox<Integer> parkingAreaNumberComboBox;
-    private List<ParkingArea> parkingAreas;
+    private ComboBox<ParkingArea> parkingAreaNumberComboBox;
+    private Stream<ParkingArea> parkingAreasStream;
 
     private void init() {
         this.parkingAreaNumberComboBox.getItems().setAll(
-                this.parkingAreas.stream().map(x -> x.id).collect(Collectors.toList()));
+                parkingAreasStream.collect(Collectors.toList()));
 
         this.queueNumberTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("queueNumber"));
         this.memberIdTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("memberId"));
@@ -46,8 +47,8 @@ public class MemberRequestQueueController {
         this.memberRequestTableView.getItems().add(new MemberRequest(1, 2, TimeString.now()));
     }
 
-    public void setParkingAreas(List<ParkingArea> parkingAreas) {
-        this.parkingAreas = parkingAreas;
+    public void setParkingAreasStream(Stream<ParkingArea> parkingAreasStream) {
+        this.parkingAreasStream = parkingAreasStream;
         init();
     }
 }
