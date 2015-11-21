@@ -1,4 +1,4 @@
-import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.MemberParkingsKVStore;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
@@ -7,8 +7,11 @@ import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
  */
 public class ParkingAreasKVStoreTest {
     public static void main(String[] args) {
-        MemberParkingsKVStore parkingAreasLogs = new MemberParkingsKVStore(new KVStoreManager());
-        parkingAreasLogs.dropAll();
-        new ParkingAreasKVStore(new KVStoreManager()).dropAll();
+        MemberParkingsKVStore memberParkingsKVStore = new MemberParkingsKVStore(new KVStoreManager());
+//        memberParkingsKVStore.dropAll();
+        memberParkingsKVStore.init();
+        new ParkingAreasKVStore(new KVStoreManager()).create(2);
+//        new ParkingAreasKVStore(new KVStoreManager()).dropAll();
+
     }
 }

@@ -1,10 +1,11 @@
 package selesdepselesnul.sipakerserver.model;
 
 /**
- * Created by morrisseymarr on 11/21/15.
+ * @author Moch Deden (https://github.com/selesdepselesnul)
  */
 public interface MemberParkings {
     int length();
-    void store(ParkingArea parkingArea);
+    void store(MemberParking memberParking);
     void dropAll();
+    void update(MemberParking memberParking);
 }

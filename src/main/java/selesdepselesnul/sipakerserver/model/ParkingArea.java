@@ -1,20 +1,24 @@
 package selesdepselesnul.sipakerserver.model;
 
+/**
+ * @author Moch Deden (https://github.com/selesdepselesnul)
+ */
 public class ParkingArea {
     public final int id;
     public final boolean isAvailable;
-    public final int memberId;
-    public final String policeNumber;
-    public final String checkIn;
-    public final String checkOut;
+    public final MemberParking memberParking;
 
     public ParkingArea(int id, boolean isAvailable, int memberId, String policeNumber, String checkIn, String checkOut) {
         this.id = id;
         this.isAvailable = isAvailable;
-        this.memberId = memberId;
-        this.policeNumber = policeNumber;
-        this.checkIn = checkIn;
-        this.checkOut = checkOut;
+        this.memberParking = new MemberParking(
+                -1,
+                memberId,
+                id,
+                policeNumber,
+                checkIn,
+                checkOut
+        );
     }
 
     @Override
@@ -22,10 +26,7 @@ public class ParkingArea {
         return "ParkingArea{" +
                 "id=" + id +
                 ", isAvailable=" + isAvailable +
-                ", memberId=" + memberId +
-                ", policeNumber='" + policeNumber + '\'' +
-                ", checkIn='" + checkIn + '\'' +
-                ", checkOut='" + checkOut + '\'' +
+                ", memberParking=" + memberParking +
                 '}';
     }
 }

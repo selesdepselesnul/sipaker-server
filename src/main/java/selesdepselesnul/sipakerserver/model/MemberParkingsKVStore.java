@@ -1,16 +1,16 @@
 package selesdepselesnul.sipakerserver.model;
 
-import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 
 import java.util.stream.IntStream;
 
 /**
- * Created by morrisseymarr on 11/21/15.
+ * @author Moch Deden (https://github.com/selesdepselesnul)
  */
 public class MemberParkingsKVStore implements MemberParkings {
 
     private static final String COLLECTION_NAME = "MemberParkings";
-    private static final String ITEM_NAME = "ParkingAreaLog";
+    private static final String ITEM_NAME = "MemberParking";
     private final KVStoreManager kvStoreManager;
 
     public MemberParkingsKVStore(KVStoreManager kvStoreManager) {
@@ -28,19 +28,29 @@ public class MemberParkingsKVStore implements MemberParkings {
     }
 
     @Override
-    public void store(ParkingArea parkingArea) {
-        final int nextLength = length() + 1;
-        final String parkingAreaLog = ITEM_NAME + nextLength;
+    public void update(MemberParking memberParking) {
+        final int length = length();
+        storeMemberParking(ITEM_NAME + length, memberParking, length);
+    }
 
-        kvStoreManager.createCollection(parkingAreaLog);
-        kvStoreManager.storeValue(parkingAreaLog, "parkingAreaId", String.valueOf(parkingArea.id));
-        kvStoreManager.storeValue(parkingAreaLog, "memberId", String.valueOf(parkingArea.memberId));
-        kvStoreManager.storeValue(parkingAreaLog, "policeNumber", parkingArea.policeNumber);
-        kvStoreManager.storeValue(parkingAreaLog, "checkIn", parkingArea.checkIn);
-        kvStoreManager.storeValue(parkingAreaLog, "checkOut", parkingArea.checkOut);
+    @Override
+    public void store(MemberParking memberParking) {
+        final int nextLength = length() + 1;
+        final String memberParkingItem = ITEM_NAME + nextLength;
+        storeMemberParking(memberParkingItem, memberParking, nextLength);
+    }
+
+    private void storeMemberParking(String collectionName, MemberParking memberParking, int length) {
+        kvStoreManager.createCollection(collectionName);
+        kvStoreManager.storeValue(collectionName, "parkingAreaId", String.valueOf(memberParking.parkingAreaId));
+        kvStoreManager.storeValue(collectionName, "memberId", String.valueOf(memberParking.memberId));
+        kvStoreManager.storeValue(collectionName, "policeNumber", memberParking.policeNumber);
+        kvStoreManager.storeValue(collectionName, "checkIn", memberParking.checkIn);
+        kvStoreManager.storeValue(collectionName, "checkOut", memberParking.checkOut);
 
         kvStoreManager.createCollection(COLLECTION_NAME);
-        kvStoreManager.storeValue(COLLECTION_NAME, "length", String.valueOf(nextLength));
+        kvStoreManager.storeValue(COLLECTION_NAME, "length", String.valueOf(length));
+
     }
 
     @Override

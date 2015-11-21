@@ -7,9 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import selesdepselesnul.sipakerserver.DateTimeParser;
-import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.Resource;
 import selesdepselesnul.sipakerserver.model.MemberParkings;
 import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
@@ -35,12 +36,12 @@ public class MemberParkingController {
     private Button readyButton;
 
 
+    public static final DateTimeFormatter INDONESIAN_D_T_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+
     final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
-    final private MemberParkings parkingAreasLogs = new MemberParkingsKVStore(new KVStoreManager());
+    final private MemberParkings memberParkings = new MemberParkingsKVStore(new KVStoreManager());
     private ImageView parkingAreaImageView;
     private ParkingArea parkingArea;
-//    private int parkingAreaId;
-//    private boolean isAvailable;
 
 
     private void init() {
@@ -50,7 +51,7 @@ public class MemberParkingController {
             Button button = (Button) actionEvent.getSource();
             if (button.getText().equals("Mulai")) {
                 checkInTextField.setDisable(false);
-                checkInTextField.setText(LocalDateTime.now().format(DateTimeParser.D_T_FORMATTER_READABLE));
+                checkInTextField.setText(LocalDateTime.now().format(INDONESIAN_D_T_FORMATTER));
                 checkInTextField.setDisable(true);
                 memberIdTextField.setDisable(false);
                 policeNumberTextField.setDisable(false);
@@ -60,21 +61,22 @@ public class MemberParkingController {
                 policeNumberTextField.setDisable(true);
                 readyButton.setText("Selesai");
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.lock));
-                updateParkingArea(false);
+                this.checkOutTextField.clear();
+                updateDatabase(false);
             } else {
-                checkOutTextField.setText(LocalDateTime.now().format(DateTimeParser.D_T_FORMATTER_READABLE));
+                checkOutTextField.setText(LocalDateTime.now().format(INDONESIAN_D_T_FORMATTER));
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.unlock));
                 readyButton.setText("Mulai");
-                updateParkingArea(true);
+                updateDatabase(true);
             }
         });
     }
 
     private void initForm() {
-        this.memberIdTextField.setText(String.valueOf(this.parkingArea.memberId));
-        this.policeNumberTextField.setText(this.parkingArea.policeNumber);
-        this.checkInTextField.setText(DateTimeParser.toReadable(this.parkingArea.checkIn));
-        this.checkOutTextField.setText(DateTimeParser.toReadable(this.parkingArea.checkOut));
+        this.memberIdTextField.setText(String.valueOf(this.parkingArea.memberParking.memberId));
+        this.policeNumberTextField.setText(this.parkingArea.memberParking.policeNumber);
+        this.checkInTextField.setText(this.parkingArea.memberParking.checkIn);
+        this.checkOutTextField.setText(this.parkingArea.memberParking.checkOut);
     }
 
     private void checkAvailability() {
@@ -85,18 +87,22 @@ public class MemberParkingController {
         }
     }
 
-    private void updateParkingArea(boolean isAvailable) {
+    private void updateDatabase(boolean isAvailable) {
         final ParkingArea parkingArea = new ParkingArea(
                 this.parkingArea.id,
                 isAvailable,
                 Integer.parseInt(memberIdTextField.getText()),
                 policeNumberTextField.getText(),
-                DateTimeParser.toUrlFriendly(checkInTextField.getText()),
-                DateTimeParser.toUrlFriendly(checkOutTextField.getText())
+                checkInTextField.getText(),
+                checkOutTextField.getText()
         );
+
         this.parkingAreasKVStore.store(parkingArea);
-        this.parkingAreasLogs.store(parkingArea);
-//        parkingAreasKVStore.log(parkingArea);
+        if(checkOutTextField.getText().equals("")) {
+            this.memberParkings.store(parkingArea.memberParking);
+        } else {
+            this.memberParkings.update(parkingArea.memberParking);
+        }
         System.out.println("Status of parking Area = " + parkingArea);
     }
 
@@ -104,15 +110,6 @@ public class MemberParkingController {
         this.parkingAreaImageView = parkingAreaImageView;
         init();
     }
-
-//    public void setParkingAreaId(int parkingAreaId) {
-//        this.parkingAreaId = parkingAreaId;
-//    }
-//
-//
-//    public void isAvailable(boolean isAvailable) {
-//        this.isAvailable = isAvailable;
-//    }
 
     public void setParkingArea(ParkingArea parkingArea) {
         this.parkingArea = parkingArea;

@@ -1,4 +1,4 @@
-package selesdepselesnul.sipakerserver;
+package selesdepselesnul.sipakerserver.Manager;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;

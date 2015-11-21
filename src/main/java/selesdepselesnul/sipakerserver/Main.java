@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import selesdepselesnul.sipakerserver.controller.MainController;
-import selesdepselesnul.sipakerserver.controller.Resource;
+import selesdepselesnul.sipakerserver.Manager.Resource;
 
 import java.io.IOException;
 
@@ -26,6 +26,7 @@ public class Main extends Application {
             GridPane mainLayout = mainLayoutLoader.load();
             MainController mainController = mainLayoutLoader.getController();
             mainController.setMainStage(primaryStage);
+            primaryStage.setTitle("Sipaker - Server -");
             primaryStage.setScene(new Scene(mainLayout));
             primaryStage.show();
         } catch (IOException e) {

@@ -1,6 +1,6 @@
 package selesdepselesnul.sipakerserver.model;
 
-import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -32,7 +32,7 @@ public class ParkingAreasKVStore implements ParkingAreas {
 
 
     @Override
-    public void decerease() {
+    public void decrease() {
         final int currentSize = this.size();
         this.kvStoreManager.deleteCollection(PARKING_AREA + currentSize);
         updateSize(currentSize - 1);
@@ -86,24 +86,11 @@ public class ParkingAreasKVStore implements ParkingAreas {
         this.kvStoreManager.createCollection(parkingAreaNumber);
         this.kvStoreManager.storeValue(parkingAreaNumber, "id", String.valueOf(parkingArea.id));
         this.kvStoreManager.storeValue(parkingAreaNumber, "isAvailable", String.valueOf(parkingArea.isAvailable));
-        this.kvStoreManager.storeValue(parkingAreaNumber, "memberId", String.valueOf(parkingArea.memberId));
-        this.kvStoreManager.storeValue(parkingAreaNumber, "policeNumber", parkingArea.policeNumber);
-        this.kvStoreManager.storeValue(parkingAreaNumber, "checkIn", parkingArea.checkIn);
-        this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.checkOut);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "memberId", String.valueOf(parkingArea.memberParking.memberId));
+        this.kvStoreManager.storeValue(parkingAreaNumber, "policeNumber", parkingArea.memberParking.policeNumber);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "checkIn", parkingArea.memberParking.checkIn);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.memberParking.checkOut);
     }
-
-    @Override
-    public void log(ParkingArea parkingArea) {
-        final String parkingAreaLog = PARKING_AREA + parkingArea.id + parkingArea.checkIn;
-        this.kvStoreManager.createCollection(parkingAreaLog);
-        this.kvStoreManager.storeValue(parkingAreaLog, "parkingAreaId", String.valueOf(parkingArea.id));
-        this.kvStoreManager.storeValue(parkingAreaLog, "memberId", String.valueOf(parkingArea.memberId));
-        this.kvStoreManager.storeValue(parkingAreaLog, "policeNumber", parkingArea.policeNumber);
-        this.kvStoreManager.storeValue(parkingAreaLog, "checkIn", parkingArea.checkIn);
-        this.kvStoreManager.storeValue(parkingAreaLog, "checkOut", parkingArea.checkOut);
-        store(parkingArea);
-    }
-
 
     @Override
     public void dropAll() {

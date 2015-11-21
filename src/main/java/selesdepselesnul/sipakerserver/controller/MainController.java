@@ -14,7 +14,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
-import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.Resource;
 import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
@@ -69,7 +70,7 @@ public class MainController {
             makeParkingAreas();
         };
         this.increasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.increase()));
-        this.decreasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.decerease()));
+        this.decreasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.decrease()));
 
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(new TimerTask() {

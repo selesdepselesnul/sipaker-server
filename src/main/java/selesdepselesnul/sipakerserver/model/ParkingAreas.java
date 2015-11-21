@@ -9,12 +9,11 @@ import java.util.stream.Stream;
 public interface ParkingAreas {
 
     void increase();
-    void decerease();
+    void decrease();
     Optional<ParkingArea> get(int id);
     Stream<ParkingArea> stream();
     int size();
     void create(int size);
     void dropAll();
     void update(ParkingArea parkingArea);
-    void log(ParkingArea parkingArea);
 }

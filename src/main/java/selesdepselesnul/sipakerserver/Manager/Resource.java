@@ -1,4 +1,4 @@
-package selesdepselesnul.sipakerserver.controller;
+package selesdepselesnul.sipakerserver.Manager;
 
 import java.net.URL;
 
