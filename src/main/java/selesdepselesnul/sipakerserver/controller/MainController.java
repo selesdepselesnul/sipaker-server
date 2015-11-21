@@ -3,6 +3,7 @@ package selesdepselesnul.sipakerserver.controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -21,15 +22,19 @@ import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
-public class MainController {
+public class MainController implements Initializable{
     @FXML
     private FlowPane parkingAreaFlowPane;
 
@@ -51,12 +56,11 @@ public class MainController {
     @FXML
     private Button memberRequestQueueButton;
 
-    private Stage primaryStage;
-
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
+    private List<ParkingArea> inMemoryParkingAreas;
 
-    public void setMainStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         init();
     }
 
@@ -116,6 +120,7 @@ public class MainController {
     }
 
     private void init() {
+        this.inMemoryParkingAreas = this.parkingAreas.stream().collect(Collectors.toList());
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
@@ -134,6 +139,8 @@ public class MainController {
                 PopOver popOver = new PopOver();
                 FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_REQUEST_QUEUE_LAYOUT);
                 AnchorPane memberRequestQueueLayout = fxmlLoader.load();
+                MemberRequestQueueController memberRequestQueueController = fxmlLoader.getController();
+                memberRequestQueueController.setParkingAreas(inMemoryParkingAreas);
                 popOver.setContentNode(memberRequestQueueLayout);
                 popOver.show(memberRequestQueueButton);
             } catch (IOException e1) {
