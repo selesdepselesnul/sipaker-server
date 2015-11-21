@@ -66,6 +66,7 @@ public class MainController {
         @Override
         public void run() {
             setVisibleFilteringByPattern(true);
+            makeParkingAreas(p -> true);
         }
     }
 
@@ -73,6 +74,7 @@ public class MainController {
 
         @Override
         public void run() {
+            setVisibleFilteringByPattern(false);
             makeParkingAreas(p -> p.isAvailable);
         }
 
@@ -87,6 +89,7 @@ public class MainController {
 
         @Override
         public void run() {
+            setVisibleFilteringByPattern(false);
             makeParkingAreas(p -> !p.isAvailable);
         }
 
@@ -99,6 +102,7 @@ public class MainController {
     private final class DisplayAllParkingAreas implements Runnable {
         @Override
         public void run() {
+            setVisibleFilteringByPattern(false);
             makeParkingAreas(p -> true);
         }
 

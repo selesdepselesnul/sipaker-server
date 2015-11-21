@@ -1,7 +1,5 @@
 package selesdepselesnul.sipakerserver;
-/**
- * @author Moch Deden (https://github.com/selesdepselesnul)
- */
+
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +10,9 @@ import selesdepselesnul.sipakerserver.controller.MainController;
 import selesdepselesnul.sipakerserver.Manager.Resource;
 
 import java.io.IOException;
-
+/**
+ * @author Moch Deden (https://github.com/selesdepselesnul)
+ */
 public class Main extends Application {
 
     public static void main(String[] args) {
