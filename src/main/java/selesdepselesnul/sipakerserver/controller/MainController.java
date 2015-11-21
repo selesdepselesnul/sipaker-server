@@ -51,7 +51,7 @@ public class MainController {
         init();
     }
 
-    private class DisplayAvailable implements Runnable {
+    private final class DisplayAvailable implements Runnable {
 
         @Override
         public void run() {
@@ -65,7 +65,20 @@ public class MainController {
 
     }
 
-    private class DisplayAllParkingAreas implements Runnable {
+    private final class DisplayNotAvailable implements Runnable {
+
+        @Override
+        public void run() {
+            makeParkingAreas(p -> !p.isAvailable);
+        }
+
+        @Override
+        public String toString() {
+            return "Dipakai";
+        }
+    }
+
+    private final class DisplayAllParkingAreas implements Runnable {
         @Override
         public void run() {
             makeParkingAreas(p -> true);
@@ -79,8 +92,9 @@ public class MainController {
 
     private void init() {
         this.makeParkingAreas(p -> true);
-        DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
-        this.displayedParkingAreasModeComboBox.getItems().setAll(displayAllParkingAreas, new DisplayAvailable());
+        final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
+        this.displayedParkingAreasModeComboBox.getItems().setAll(
+                displayAllParkingAreas, new DisplayAvailable(), new DisplayNotAvailable());
         this.displayedParkingAreasModeComboBox.setValue(displayAllParkingAreas);
         this.displayedParkingAreasModeComboBox.setOnAction(
                 e -> displayedParkingAreasModeComboBox.getSelectionModel().getSelectedItem().run());
