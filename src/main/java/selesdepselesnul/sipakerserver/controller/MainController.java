@@ -2,10 +2,12 @@ package selesdepselesnul.sipakerserver.controller;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -16,6 +18,7 @@ import selesdepselesnul.sipakerserver.KVStoreManager;
 import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
@@ -87,73 +90,25 @@ public class MainController {
             if (!x.isAvailable) {
                 image = Resource.Image.lock;
             }
-            final ImageView parkingImageView = new ImageView(new Image(image));
-            parkingImageView.setOnMouseClicked(e -> {
-                PopOver popOver = new PopOver();
-
-                VBox mainLayout = new VBox();
-
-                TextField memberIdTextField = new TextField();
-                memberIdTextField.setText(x.id + "");
-                memberIdTextField.setDisable(true);
-                Label idLabel = new Label("No.Id  : ");
-                idLabel.setLabelFor(memberIdTextField);
-                HBox memberIdLayout = new HBox(idLabel, memberIdTextField);
-
-                TextField policeNumberTextField = new TextField();
-                policeNumberTextField.setText(x.policeNumber);
-                policeNumberTextField.setDisable(true);
-                Label policeNumberLabel = new Label("Nopol  : ");
-                policeNumberLabel.setLabelFor(policeNumberTextField);
-                HBox policeNumberLayout = new HBox(policeNumberLabel, policeNumberTextField);
-
-                TextField checkInTextField = new TextField(x.checkIn);
-                checkInTextField.setDisable(true);
-                Label checkInLabel = new Label("Masuk  : ");
-                checkInLabel.setLabelFor(checkInTextField);
-                HBox checkInLayout = new HBox(checkInLabel, checkInTextField);
-
-                TextField checkOutTextField = new TextField(x.checkOut);
-                checkOutTextField.setDisable(true);
-                Label checkOutLabel = new Label("Keluar : ");
-                checkOutLabel.setLabelFor(checkOutTextField);
-                HBox checkOutLayout = new HBox(checkOutLabel, checkOutTextField);
-
-                Button readyButton = new Button();
-                readyButton.setOnAction(actionEvent -> {
-                    Button button = (Button) actionEvent.getSource();
-                    if (button.getText().equals("Mulai")) {
-                        memberIdTextField.setDisable(false);
-                        policeNumberTextField.setDisable(false);
-                        readyButton.setText("Simpan");
-                    } else if (readyButton.getText().equals("Simpan")) {
-                        memberIdTextField.setDisable(true);
-                        policeNumberTextField.setDisable(true);
-                        readyButton.setText("Selesai");
-                        parkingImageView.setImage(new Image(Resource.Image.lock));
-                    } else {
-                        parkingImageView.setImage(new Image(Resource.Image.unlock));
-                        readyButton.setText("Mulai");
-                    }
-                });
-
-                if (x.isAvailable) {
-                    readyButton.setText("Mulai");
-                } else {
-                    readyButton.setText("Selesai");
+            final ImageView parkingAreaImageView = new ImageView(new Image(image));
+            parkingAreaImageView.setOnMouseClicked(e -> {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
+                    AnchorPane contentNode = fxmlLoader.load();
+                    MemberParkingController memberParkingController = fxmlLoader.getController();
+                    memberParkingController.setParkingAreaImageView(parkingAreaImageView);
+                    PopOver popOver = new PopOver(contentNode);
+                    popOver.show(parkingAreaImageView);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
-
-                mainLayout.getChildren().setAll(memberIdLayout, policeNumberLayout, checkInLayout, checkOutLayout,
-                        readyButton);
-                popOver.setContentNode(mainLayout);
-                popOver.show(parkingImageView);
             });
-            parkingImageView.setFitHeight(80);
-            parkingImageView.setFitWidth(80);
-            parkingImageView.setCursor(Cursor.CLOSED_HAND);
+            parkingAreaImageView.setFitHeight(80);
+            parkingAreaImageView.setFitWidth(80);
+            parkingAreaImageView.setCursor(Cursor.CLOSED_HAND);
             final Text parkingAreaIdText = new Text(String.valueOf(x.id));
             parkingAreaIdText.setCursor(Cursor.CLOSED_HAND);
-            parkingAreaFlowPane.getChildren().add(new VBox(parkingImageView, parkingAreaIdText));
+            parkingAreaFlowPane.getChildren().add(new VBox(parkingAreaImageView, parkingAreaIdText));
         });
     }
 }
