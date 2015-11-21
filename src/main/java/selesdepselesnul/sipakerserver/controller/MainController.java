@@ -42,6 +42,12 @@ public class MainController {
     @FXML
     private ComboBox<Runnable> displayedParkingAreasModeComboBox;
 
+    @FXML
+    private TextField patternTextField;
+
+    @FXML
+    private ComboBox<String> filteringByPatternComboBox;
+
     private Stage primaryStage;
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
@@ -49,6 +55,18 @@ public class MainController {
     public void setMainStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
         init();
+    }
+
+    private final class FilteringByPattern implements Runnable {
+        @Override
+        public String toString() {
+            return "Berdasarkan pola";
+        }
+
+        @Override
+        public void run() {
+            setVisibleFilteringByPattern(true);
+        }
     }
 
     private final class DisplayAvailable implements Runnable {
@@ -94,7 +112,7 @@ public class MainController {
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
-                displayAllParkingAreas, new DisplayAvailable(), new DisplayNotAvailable());
+                displayAllParkingAreas, new DisplayAvailable(), new DisplayNotAvailable(), new FilteringByPattern());
         this.displayedParkingAreasModeComboBox.setValue(displayAllParkingAreas);
         this.displayedParkingAreasModeComboBox.setOnAction(
                 e -> displayedParkingAreasModeComboBox.getSelectionModel().getSelectedItem().run());
@@ -115,6 +133,11 @@ public class MainController {
                 );
             }
         }, 1000l, 1000l);
+    }
+
+    private void setVisibleFilteringByPattern(boolean isVisible) {
+        this.patternTextField.setVisible(isVisible);
+        this.filteringByPatternComboBox.setVisible(isVisible);
     }
 
     private void makeParkingAreas(Predicate<ParkingArea> predicate) {
