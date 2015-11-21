@@ -33,8 +33,8 @@ public class MemberParkingController {
     private Button readyButton;
 
 
-    DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
-
+    private static final DateTimeFormatter DATE_TIME_FORMATER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+    private static final DateTimeFormatter DATE_TIME_FORMATER_URL_FRIENDLY = DateTimeFormatter.ofPattern("HHmmssddMMyyyy");
     private ImageView parkingAreaImageView;
     private int parkingAreaId;
     final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
@@ -53,16 +53,16 @@ public class MemberParkingController {
                 policeNumberTextField.setDisable(false);
                 readyButton.setText("Simpan");
             } else if (readyButton.getText().equals("Simpan")) {
-//                updateParkingArea();
                 memberIdTextField.setDisable(true);
                 policeNumberTextField.setDisable(true);
                 readyButton.setText("Selesai");
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.lock));
+                updateParkingArea(false);
             } else {
-//                updateParkingArea();
                 checkOutTextField.setText(LocalDateTime.now().format(DATE_TIME_FORMATER));
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.unlock));
                 readyButton.setText("Mulai");
+                updateParkingArea(true);
             }
         });
     }
@@ -75,14 +75,19 @@ public class MemberParkingController {
         }
     }
 
-    private void updateParkingArea() {
+    private void updateParkingArea(boolean isAvailable) {
+        String checkOut = "";
+        if (isAvailable)
+            checkOut = LocalDateTime.parse(checkOutTextField.getText(), DATE_TIME_FORMATER)
+                    .format(DATE_TIME_FORMATER_URL_FRIENDLY);
+
         final ParkingArea parkingArea = new ParkingArea(
                 parkingAreaId,
-                false,
+                isAvailable,
                 Integer.parseInt(memberIdTextField.getText()),
                 policeNumberTextField.getText(),
-                checkInTextField.getText(),
-                checkOutTextField.getText()
+                LocalDateTime.parse(checkInTextField.getText(), DATE_TIME_FORMATER).format(DATE_TIME_FORMATER_URL_FRIENDLY),
+                checkOut
         );
         parkingAreasKVStore.store(parkingArea);
         parkingAreasKVStore.log(parkingArea);

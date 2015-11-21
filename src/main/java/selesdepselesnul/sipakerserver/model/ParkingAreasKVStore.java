@@ -93,7 +93,7 @@ public class ParkingAreasKVStore implements ParkingAreas {
     }
 
     public void log(ParkingArea parkingArea) {
-        final String parkingAreaLog = PARKING_AREA + "*" + parkingArea.id + "*" + parkingArea.checkIn;
+        final String parkingAreaLog = PARKING_AREA + parkingArea.id + parkingArea.checkIn;
         this.kvStoreManager.createCollection(parkingAreaLog);
         this.kvStoreManager.storeValue(parkingAreaLog, "parkingAreaId", String.valueOf(parkingArea.id));
         this.kvStoreManager.storeValue(parkingAreaLog, "memberId", String.valueOf(parkingArea.memberId));
