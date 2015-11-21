@@ -34,15 +34,16 @@ public class MemberParkingController {
     private Button readyButton;
 
 
-
-    private ImageView parkingAreaImageView;
-    private int parkingAreaId;
     final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
-    private boolean isAvailable;
+    private ImageView parkingAreaImageView;
+    private ParkingArea parkingArea;
+//    private int parkingAreaId;
+//    private boolean isAvailable;
 
 
     private void init() {
         checkAvailability();
+        initForm();
         readyButton.setOnAction(actionEvent -> {
             Button button = (Button) actionEvent.getSource();
             if (button.getText().equals("Mulai")) {
@@ -67,8 +68,15 @@ public class MemberParkingController {
         });
     }
 
+    private void initForm() {
+        this.memberIdTextField.setText(String.valueOf(this.parkingArea.memberId));
+        this.policeNumberTextField.setText(this.parkingArea.policeNumber);
+        this.checkInTextField.setText(DateTimeParser.toReadable(this.parkingArea.checkIn));
+        this.checkOutTextField.setText(DateTimeParser.toReadable(this.parkingArea.checkOut));
+    }
+
     private void checkAvailability() {
-        if (this.isAvailable) {
+        if (this.parkingArea.isAvailable) {
             this.readyButton.setText("Mulai");
         } else {
             this.readyButton.setText("Selesai");
@@ -76,20 +84,17 @@ public class MemberParkingController {
     }
 
     private void updateParkingArea(boolean isAvailable) {
-        String checkOut = "";
-        if (isAvailable)
-            checkOut = DateTimeParser.toUrlFriendly(checkInTextField.getText());
-
         final ParkingArea parkingArea = new ParkingArea(
-                parkingAreaId,
+                this.parkingArea.id,
                 isAvailable,
                 Integer.parseInt(memberIdTextField.getText()),
                 policeNumberTextField.getText(),
                 DateTimeParser.toUrlFriendly(checkInTextField.getText()),
-                checkOut
+                DateTimeParser.toUrlFriendly(checkOutTextField.getText())
         );
         parkingAreasKVStore.store(parkingArea);
         parkingAreasKVStore.log(parkingArea);
+        System.out.println("Status of parking Area = " + parkingArea);
     }
 
     public void setParkingAreaImageView(ImageView parkingAreaImageView) {
@@ -97,12 +102,16 @@ public class MemberParkingController {
         init();
     }
 
-    public void setParkingAreaId(int parkingAreaId) {
-        this.parkingAreaId = parkingAreaId;
-    }
+//    public void setParkingAreaId(int parkingAreaId) {
+//        this.parkingAreaId = parkingAreaId;
+//    }
+//
+//
+//    public void isAvailable(boolean isAvailable) {
+//        this.isAvailable = isAvailable;
+//    }
 
-
-    public void isAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public void setParkingArea(ParkingArea parkingArea) {
+        this.parkingArea = parkingArea;
     }
 }

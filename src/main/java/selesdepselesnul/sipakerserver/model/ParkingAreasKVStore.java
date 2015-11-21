@@ -44,7 +44,7 @@ public class ParkingAreasKVStore implements ParkingAreas {
         return Optional.of(
                 new ParkingArea(
                         id,
-                        Boolean.getBoolean(this.kvStoreManager.getValue(parkingArea, "isAvailable").orElse("true")),
+                        Boolean.parseBoolean(this.kvStoreManager.getValue(parkingArea, "isAvailable").orElse("true")),
                         Integer.valueOf(this.kvStoreManager.getValue(parkingArea, "memberId").orElse("")),
                         this.kvStoreManager.getValue(parkingArea, "policeNumber").orElse(""),
                         this.kvStoreManager.getValue(parkingArea, "checkIn").orElse(""),

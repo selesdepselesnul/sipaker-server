@@ -7,6 +7,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -14,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import selesdepselesnul.sipakerserver.KVStoreManager;
+import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreas;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 
@@ -81,7 +83,6 @@ public class MainController {
         }, 1000l, 1000l);
     }
 
-
     private void makeParkingAreas() {
         this.parkingAreaFlowPane.getChildren().clear();
         this.parkingAreas.stream().forEach(x -> {
@@ -98,23 +99,30 @@ public class MainController {
             parkingAreaImageView.setFitHeight(80);
             parkingAreaImageView.setFitWidth(80);
             parkingAreaImageView.setCursor(Cursor.CLOSED_HAND);
+            parkingAreaImageView.setId(String.valueOf(x.id));
 
-            parkingAreaImageView.setOnMouseClicked(e -> {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
-                    AnchorPane contentNode = fxmlLoader.load();
-                    MemberParkingController memberParkingController = fxmlLoader.getController();
-                    memberParkingController.isAvailable(x.isAvailable);
-                    memberParkingController.setParkingAreaId(Integer.parseInt(parkingAreaIdText.getText()));
-                    memberParkingController.setParkingAreaImageView(parkingAreaImageView);
-                    PopOver popOver = new PopOver(contentNode);
-                    popOver.show(parkingAreaImageView);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            });
+            parkingAreaImageView.setOnMouseClicked(this::onParkingAreaClicked);
 
             parkingAreaFlowPane.getChildren().add(new VBox(parkingAreaImageView, parkingAreaIdText));
         });
+    }
+
+    private void onParkingAreaClicked(MouseEvent mouseEvent) {
+        try {
+            ImageView parkingAreaImageView = (ImageView) mouseEvent.getSource();
+            FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
+            AnchorPane contentNode = fxmlLoader.load();
+            MemberParkingController memberParkingController = fxmlLoader.getController();
+             final ParkingArea parkingArea = this.parkingAreas.get(
+                        Integer.parseInt(parkingAreaImageView.getId())
+                    ).get();
+            memberParkingController.setParkingArea(parkingArea);
+            System.out.println("Selected ParkingArea = " + parkingArea);
+            memberParkingController.setParkingAreaImageView(parkingAreaImageView);
+            PopOver popOver = new PopOver(contentNode);
+            popOver.show(parkingAreaImageView);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 }
