@@ -15,4 +15,5 @@ public interface ParkingAreas {
     int size();
     void create(int size);
     void dropAll();
+    void update(ParkingArea parkingArea);
 }

@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -87,15 +86,26 @@ public class MainController {
         this.parkingAreaFlowPane.getChildren().clear();
         this.parkingAreas.stream().forEach(x -> {
             String image = Resource.Image.unlock;
+
             if (!x.isAvailable) {
                 image = Resource.Image.lock;
             }
+
+            final Text parkingAreaIdText = new Text(String.valueOf(x.id));
+            parkingAreaIdText.setCursor(Cursor.CLOSED_HAND);
+
             final ImageView parkingAreaImageView = new ImageView(new Image(image));
+            parkingAreaImageView.setFitHeight(80);
+            parkingAreaImageView.setFitWidth(80);
+            parkingAreaImageView.setCursor(Cursor.CLOSED_HAND);
+
             parkingAreaImageView.setOnMouseClicked(e -> {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
                     AnchorPane contentNode = fxmlLoader.load();
                     MemberParkingController memberParkingController = fxmlLoader.getController();
+                    memberParkingController.isAvailable(x.isAvailable);
+                    memberParkingController.setParkingAreaId(Integer.parseInt(parkingAreaIdText.getText()));
                     memberParkingController.setParkingAreaImageView(parkingAreaImageView);
                     PopOver popOver = new PopOver(contentNode);
                     popOver.show(parkingAreaImageView);
@@ -103,11 +113,7 @@ public class MainController {
                     e1.printStackTrace();
                 }
             });
-            parkingAreaImageView.setFitHeight(80);
-            parkingAreaImageView.setFitWidth(80);
-            parkingAreaImageView.setCursor(Cursor.CLOSED_HAND);
-            final Text parkingAreaIdText = new Text(String.valueOf(x.id));
-            parkingAreaIdText.setCursor(Cursor.CLOSED_HAND);
+
             parkingAreaFlowPane.getChildren().add(new VBox(parkingAreaImageView, parkingAreaIdText));
         });
     }

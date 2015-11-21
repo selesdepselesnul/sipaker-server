@@ -78,19 +78,40 @@ public class ParkingAreasKVStore implements ParkingAreas {
     }
 
     private void createDefaultParkingArea(int id) {
-        final String parkingArea = PARKING_AREA + id;
-        this.kvStoreManager.createCollection(parkingArea);
-        this.kvStoreManager.storeValue(parkingArea, "id", String.valueOf(id));
-        this.kvStoreManager.storeValue(parkingArea, "isAvailable", "true");
-        this.kvStoreManager.storeValue(parkingArea, "memberId", "-1");
-        this.kvStoreManager.storeValue(parkingArea, "policeNumber", "");
-        this.kvStoreManager.storeValue(parkingArea, "checkIn", "");
-        this.kvStoreManager.storeValue(parkingArea, "checkOut", "");
+        store(new ParkingArea(id, true, -1, "", "", ""));
     }
+
+    public void store(ParkingArea parkingArea) {
+        final String parkingAreaNumber = PARKING_AREA + parkingArea.id;
+        this.kvStoreManager.createCollection(parkingAreaNumber);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "id", String.valueOf(parkingArea.id));
+        this.kvStoreManager.storeValue(parkingAreaNumber, "isAvailable", String.valueOf(parkingArea.isAvailable));
+        this.kvStoreManager.storeValue(parkingAreaNumber, "memberId", String.valueOf(parkingArea.memberId));
+        this.kvStoreManager.storeValue(parkingAreaNumber, "policeNumber", parkingArea.policeNumber);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "checkIn", parkingArea.checkIn);
+        this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.checkOut);
+    }
+
+    public void log(ParkingArea parkingArea) {
+        final String parkingAreaLog = PARKING_AREA + "*" + parkingArea.id + "*" + parkingArea.checkIn;
+        this.kvStoreManager.createCollection(parkingAreaLog);
+        this.kvStoreManager.storeValue(parkingAreaLog, "parkingAreaId", String.valueOf(parkingArea.id));
+        this.kvStoreManager.storeValue(parkingAreaLog, "memberId", String.valueOf(parkingArea.memberId));
+        this.kvStoreManager.storeValue(parkingAreaLog, "policeNumber", parkingArea.policeNumber);
+        this.kvStoreManager.storeValue(parkingAreaLog, "checkIn", parkingArea.checkIn);
+        this.kvStoreManager.storeValue(parkingAreaLog, "checkOut", parkingArea.checkOut);
+        store(parkingArea);
+    }
+
 
     @Override
     public void dropAll() {
         IntStream.rangeClosed(1, size()).forEachOrdered(i -> kvStoreManager.deleteCollection(PARKING_AREA + i));
         this.kvStoreManager.deleteCollection(PARKING_AREAS_COLLECTION);
+    }
+
+    @Override
+    public void update(ParkingArea parkingArea) {
+        store(parkingArea);
     }
 }

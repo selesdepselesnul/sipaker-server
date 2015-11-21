@@ -8,7 +8,7 @@ public class ParkingArea {
     public final String checkIn;
     public final String checkOut;
 
-    ParkingArea(int id, boolean isAvailable, int memberId, String policeNumber, String checkIn, String checkOut) {
+    public ParkingArea(int id, boolean isAvailable, int memberId, String policeNumber, String checkIn, String checkOut) {
         this.id = id;
         this.isAvailable = isAvailable;
         this.memberId = memberId;
