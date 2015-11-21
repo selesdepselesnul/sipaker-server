@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
@@ -50,10 +51,24 @@ public class MainController {
         init();
     }
 
+    private class DisplayAvailable implements Runnable {
+
+        @Override
+        public void run() {
+            makeParkingAreas(p -> p.isAvailable);
+        }
+
+          @Override
+        public String toString() {
+            return "Kosong";
+        }
+
+    }
+
     private class DisplayAllParkingAreas implements Runnable {
         @Override
         public void run() {
-            makeParkingAreas();
+            makeParkingAreas(p -> true);
         }
 
         @Override
@@ -63,11 +78,15 @@ public class MainController {
     }
 
     private void init() {
-        this.makeParkingAreas();
-        this.displayedParkingAreasModeComboBox.getItems().setAll(new DisplayAllParkingAreas());
+        this.makeParkingAreas(p -> true);
+        DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
+        this.displayedParkingAreasModeComboBox.getItems().setAll(displayAllParkingAreas, new DisplayAvailable());
+        this.displayedParkingAreasModeComboBox.setValue(displayAllParkingAreas);
+        this.displayedParkingAreasModeComboBox.setOnAction(
+                e -> displayedParkingAreasModeComboBox.getSelectionModel().getSelectedItem().run());
         Consumer<Runnable> updateSize = x -> {
             x.run();
-            makeParkingAreas();
+            makeParkingAreas(p -> true);
         };
         this.increasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.increase()));
         this.decreasingParkingSizeButton.setOnAction(x -> updateSize.accept(() -> this.parkingAreas.decrease()));
@@ -84,9 +103,9 @@ public class MainController {
         }, 1000l, 1000l);
     }
 
-    private void makeParkingAreas() {
+    private void makeParkingAreas(Predicate<ParkingArea> predicate) {
         this.parkingAreaFlowPane.getChildren().clear();
-        this.parkingAreas.stream().forEach(x -> {
+        this.parkingAreas.stream().filter(predicate).forEach(x -> {
             String image = Resource.Image.unlock;
 
             if (!x.isAvailable) {
