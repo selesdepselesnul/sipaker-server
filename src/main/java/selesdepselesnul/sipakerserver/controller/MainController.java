@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
-public class MainController implements Initializable{
+public class MainController implements Initializable {
     @FXML
     private FlowPane parkingAreaFlowPane;
 
@@ -140,6 +140,12 @@ public class MainController implements Initializable{
                 FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_REQUEST_QUEUE_LAYOUT);
                 AnchorPane memberRequestQueueLayout = fxmlLoader.load();
                 MemberRequestQueueController memberRequestQueueController = fxmlLoader.getController();
+                memberRequestQueueController.setParkingAreaImageViews(
+                        parkingAreaFlowPane.getChildren().stream().map(x -> {
+                            VBox vBox = (VBox) x;
+                            ImageView parkingAreaImageView = (ImageView) vBox.getChildren().get(0);
+                            return parkingAreaImageView;
+                        }).collect(Collectors.toList()));
                 memberRequestQueueController.setParkingAreasStream(parkingAreas.stream().filter(p -> p.isAvailable));
                 popOver.setContentNode(memberRequestQueueLayout);
                 popOver.show(memberRequestQueueButton);

@@ -6,11 +6,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
+import selesdepselesnul.sipakerserver.Manager.Resource;
 import selesdepselesnul.sipakerserver.TimeString;
-import selesdepselesnul.sipakerserver.model.MemberRequest;
-import selesdepselesnul.sipakerserver.model.ParkingArea;
+import selesdepselesnul.sipakerserver.model.*;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +36,7 @@ public class MemberRequestQueueController {
     @FXML
     private ComboBox<ParkingArea> parkingAreaNumberComboBox;
     private Stream<ParkingArea> parkingAreasStream;
+    private List<ImageView> parkingAreaImageViews;
 
     private void init() {
         this.parkingAreaNumberComboBox.getItems().setAll(
@@ -44,11 +48,38 @@ public class MemberRequestQueueController {
 
         this.memberRequestTableView.getColumns().setAll(queueNumberTableColumn, memberIdTableColumn, requestTimeTableColumn);
 
-        this.memberRequestTableView.getItems().add(new MemberRequest(1, 2, TimeString.now()));
+        this.memberRequestTableView.getItems().addAll(
+                Arrays.asList(
+                        new MemberRequest(1, 2, TimeString.now()),
+                        new MemberRequest(2, 3, TimeString.now())
+                )
+        );
+
+        this.parkingAreaNumberComboBox.setOnAction(e -> {
+            ParkingArea selectedParkingArea = parkingAreaNumberComboBox.getSelectionModel().getSelectedItem();
+            this.parkingAreaImageViews.stream()
+                    .filter(p -> Integer.parseInt(p.getId()) == selectedParkingArea.id)
+                    .forEach(x -> x.setImage(new Image(Resource.Image.lock)));
+            MemberRequest selectedMemberRequest = this.memberRequestTableView.getItems().remove(0);
+            ParkingArea parkingArea = new ParkingArea(
+                    selectedParkingArea.id,
+                    false,
+                    selectedMemberRequest.getMemberId(),
+                    "",
+                    TimeString.now(),
+                    ""
+            );
+            new ParkingAreasKVStore(new KVStoreManager()).store(parkingArea);
+            new MemberParkingsKVStore(new KVStoreManager()).store(parkingArea.memberParking);
+        });
     }
 
     public void setParkingAreasStream(Stream<ParkingArea> parkingAreasStream) {
         this.parkingAreasStream = parkingAreasStream;
         init();
+    }
+
+    public void setParkingAreaImageViews(List<ImageView> parkingAreaImageViews) {
+        this.parkingAreaImageViews = parkingAreaImageViews;
     }
 }
