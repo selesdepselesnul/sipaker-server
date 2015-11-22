@@ -14,6 +14,7 @@ import selesdepselesnul.sipakerserver.TimeString;
 import selesdepselesnul.sipakerserver.model.*;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,6 +42,7 @@ public class MemberRequestQueueController {
 
     private Stream<ParkingArea> parkingAreasStream;
     private List<ImageView> parkingAreaImageViews;
+    private AtomicInteger queueLength;
 
     private void init() {
         this.parkingAreaNumberComboBox.getItems().setAll(
@@ -75,6 +77,7 @@ public class MemberRequestQueueController {
             new ParkingAreasKVStore(new KVStoreManager()).store(parkingArea);
             new MemberParkingsKVStore(new KVStoreManager()).store(parkingArea.memberParking);
             new MemberRequestsKVStore(new KVStoreManager()).dequeu();
+            this.queueLength.decrementAndGet();
         });
     }
 
@@ -85,5 +88,9 @@ public class MemberRequestQueueController {
 
     public void setParkingAreaImageViews(List<ImageView> parkingAreaImageViews) {
         this.parkingAreaImageViews = parkingAreaImageViews;
+    }
+
+    public void setQueueLength(AtomicInteger queueLength) {
+        this.queueLength = queueLength;
     }
 }

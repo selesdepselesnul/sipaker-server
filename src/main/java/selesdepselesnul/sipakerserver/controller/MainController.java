@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.Manager.Resource;
@@ -21,9 +21,11 @@ import selesdepselesnul.sipakerserver.model.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -53,7 +55,7 @@ public class MainController implements Initializable {
     @FXML
     private Button memberRequestQueueButton;
 
-    private int queueSize;
+    private AtomicInteger queueLength = new AtomicInteger();
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
     final private MemberRequests memberRequests = new MemberRequestsKVStore(new KVStoreManager());
@@ -119,7 +121,7 @@ public class MainController implements Initializable {
     }
 
     private void init() {
-        this.queueSize = memberRequests.length();
+        this.queueLength.set(this.memberRequests.length());
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
@@ -139,6 +141,7 @@ public class MainController implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_REQUEST_QUEUE_LAYOUT);
                 AnchorPane memberRequestQueueLayout = fxmlLoader.load();
                 MemberRequestQueueController memberRequestQueueController = fxmlLoader.getController();
+                memberRequestQueueController.setQueueLength(this.queueLength);
                 memberRequestQueueController.setParkingAreaImageViews(
                         parkingAreaFlowPane.getChildren().stream().map(x -> {
                             VBox vBox = (VBox) x;
@@ -158,9 +161,13 @@ public class MainController implements Initializable {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                            if (queueSize < memberRequests.length()) {
-                                PopOver popOver = new PopOver(new Text("Ada antrian Baru !"));
-                                popOver.show(memberRequestQueueButton);
+                            if (queueLength.get() != memberRequests.length())  {
+                                Notifications.create()
+                                        .title("Informasi")
+                                        .text("Ada antrian baru!")
+                                        .darkStyle()
+                                        .show();
+                                queueLength.set(memberRequests.length());
                             }
 
                         }
