@@ -4,15 +4,16 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="337.0" prefWidth="489.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="selesdepselesnul.sipakerserver.controller.MemberRequestQueueController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328.0" prefWidth="626.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="selesdepselesnul.sipakerserver.controller.MemberRequestQueueController">
     <children>
-        <TableView fx:id="memberRequestTableView" layoutX="64.0" layoutY="37.0" prefHeight="225.0" prefWidth="381.0">
+        <TableView fx:id="memberRequestTableView" layoutX="64.0" layoutY="37.0" prefHeight="225.0" prefWidth="515.0">
             <columns>
                 <TableColumn fx:id="queueNumberTableColumn" prefWidth="111.0" text="No. Antrian" />
                 <TableColumn fx:id="memberIdTableColumn" prefWidth="107.0" text="Id Anggota" />
-                <TableColumn fx:id="requestTimeTableColumn" prefWidth="162.0" text="Waktu Request" />
+            <TableColumn fx:id="policeNumberTableColumn" prefWidth="136.0" text="Nomor Polisi" />
+                <TableColumn fx:id="requestTimeTableColumn" prefWidth="160.0" text="Waktu Request" />
             </columns>
         </TableView>
-        <ComboBox fx:id="parkingAreaNumberComboBox" layoutX="64.0" layoutY="273.0" prefHeight="26.0" prefWidth="184.0" promptText="Nomor Parkir Area" />
+        <ComboBox fx:id="parkingAreaNumberComboBox" layoutX="64.0" layoutY="262.0" prefHeight="26.0" prefWidth="184.0" promptText="Nomor Parkir Area" />
     </children>
 </AnchorPane>

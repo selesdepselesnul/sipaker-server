@@ -31,10 +31,14 @@ public class MemberRequestQueueController {
     private TableColumn<MemberRequest, Integer> memberIdTableColumn;
 
     @FXML
+    private TableColumn<MemberRequest, String> policeNumberTableColumn;
+
+    @FXML
     private TableColumn<MemberRequest, String> requestTimeTableColumn;
 
     @FXML
     private ComboBox<ParkingArea> parkingAreaNumberComboBox;
+
     private Stream<ParkingArea> parkingAreasStream;
     private List<ImageView> parkingAreaImageViews;
 
@@ -44,14 +48,16 @@ public class MemberRequestQueueController {
 
         this.queueNumberTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("queueNumber"));
         this.memberIdTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("memberId"));
+        this.policeNumberTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, String>("policeNumber"));
         this.requestTimeTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, String>("requestTime"));
 
-        this.memberRequestTableView.getColumns().setAll(queueNumberTableColumn, memberIdTableColumn, requestTimeTableColumn);
+        this.memberRequestTableView.getColumns().setAll(queueNumberTableColumn, memberIdTableColumn,
+                policeNumberTableColumn, requestTimeTableColumn);
 
         this.memberRequestTableView.getItems().addAll(
                 Arrays.asList(
-                        new MemberRequest(1, 2, TimeString.now()),
-                        new MemberRequest(2, 3, TimeString.now())
+                        new MemberRequest(1, 2, "B1234", TimeString.now()),
+                        new MemberRequest(2, 3, "D4321", TimeString.now())
                 )
         );
 
@@ -65,7 +71,7 @@ public class MemberRequestQueueController {
                     selectedParkingArea.id,
                     false,
                     selectedMemberRequest.getMemberId(),
-                    "",
+                    selectedMemberRequest.getPoliceNumber(),
                     TimeString.now(),
                     ""
             );

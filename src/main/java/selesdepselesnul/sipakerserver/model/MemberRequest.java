@@ -10,11 +10,13 @@ public class MemberRequest {
 
     private SimpleIntegerProperty queueNumber;
     private SimpleIntegerProperty memberId;
+    private SimpleStringProperty policeNumber;
     private SimpleStringProperty requestTime;
 
-    public MemberRequest(int queueNumber, int memberId, String requestTime) {
+    public MemberRequest(int queueNumber, int memberId, String policeNumber, String requestTime) {
         this.queueNumber = new SimpleIntegerProperty(queueNumber);
         this.memberId = new SimpleIntegerProperty(memberId);
+        this.policeNumber = new SimpleStringProperty(policeNumber);
         this.requestTime = new SimpleStringProperty(requestTime);
     }
 
@@ -22,7 +24,9 @@ public class MemberRequest {
         return queueNumber.get();
     }
 
-
+    public String getPoliceNumber() {
+        return policeNumber.get();
+    }
 
     public int getMemberId() {
         return memberId.get();
@@ -32,7 +36,6 @@ public class MemberRequest {
     public String getRequestTime() {
         return requestTime.get();
     }
-
 
 
 }
