@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.PopOver;
 import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.Manager.Resource;
@@ -51,6 +52,8 @@ public class MainController implements Initializable {
 
     @FXML
     private Button memberRequestQueueButton;
+
+    private int queueSize;
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
     final private MemberRequests memberRequests = new MemberRequestsKVStore(new KVStoreManager());
@@ -116,6 +119,7 @@ public class MainController implements Initializable {
     }
 
     private void init() {
+        this.queueSize = memberRequests.length();
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
@@ -154,7 +158,11 @@ public class MainController implements Initializable {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                            System.out.println("I'm working !");
+                            if (queueSize < memberRequests.length()) {
+                                PopOver popOver = new PopOver(new Text("Ada antrian Baru !"));
+                                popOver.show(memberRequestQueueButton);
+                            }
+
                         }
                 );
             }

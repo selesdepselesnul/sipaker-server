@@ -15,8 +15,8 @@ public class ParkingAreasKVStoreTest {
         MemberRequests memberRequest = new MemberRequestsKVStore(new KVStoreManager());
 //        memberRequest.dropAll();
 //        memberRequest.init();
-//        memberRequest.store(new MemberRequest(1, 2, "A1234", TimeString.now()));
-        System.out.println(memberRequest.dequeu().getMemberId());
+        memberRequest.store(new MemberRequest(1, 2, "A1234", TimeString.now()));
+//        System.out.println(memberRequest.dequeu().getMemberId());
 //        memberRequest.store(new MemberRequest(1, 2, "A1234", TimeString.now()));
     }
 }
