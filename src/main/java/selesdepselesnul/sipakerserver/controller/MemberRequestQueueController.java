@@ -55,10 +55,7 @@ public class MemberRequestQueueController {
                 policeNumberTableColumn, requestTimeTableColumn);
 
         this.memberRequestTableView.getItems().addAll(
-                Arrays.asList(
-                        new MemberRequest(1, 2, "B1234", TimeString.now()),
-                        new MemberRequest(2, 3, "D4321", TimeString.now())
-                )
+               new MemberRequestsKVStore(new KVStoreManager()).stream().collect(Collectors.toList())
         );
 
         this.parkingAreaNumberComboBox.setOnAction(e -> {
@@ -77,6 +74,7 @@ public class MemberRequestQueueController {
             );
             new ParkingAreasKVStore(new KVStoreManager()).store(parkingArea);
             new MemberParkingsKVStore(new KVStoreManager()).store(parkingArea.memberParking);
+            new MemberRequestsKVStore(new KVStoreManager()).dequeu();
         });
     }
 

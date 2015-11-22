@@ -13,17 +13,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.controlsfx.control.PopOver;
 import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.Manager.Resource;
-import selesdepselesnul.sipakerserver.model.ParkingArea;
-import selesdepselesnul.sipakerserver.model.ParkingAreas;
-import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
+import selesdepselesnul.sipakerserver.model.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,7 +53,7 @@ public class MainController implements Initializable {
     private Button memberRequestQueueButton;
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
-    private List<ParkingArea> inMemoryParkingAreas;
+    final private MemberRequests memberRequests = new MemberRequestsKVStore(new KVStoreManager());
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -120,7 +116,6 @@ public class MainController implements Initializable {
     }
 
     private void init() {
-        this.inMemoryParkingAreas = this.parkingAreas.stream().collect(Collectors.toList());
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
