@@ -21,10 +21,7 @@ import selesdepselesnul.sipakerserver.model.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -59,6 +56,7 @@ public class MainController implements Initializable {
 
     final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
     final private MemberRequests memberRequests = new MemberRequestsKVStore(new KVStoreManager());
+    private List<ParkingArea> parkingAreaInMemoryList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -121,6 +119,7 @@ public class MainController implements Initializable {
     }
 
     private void init() {
+        this.parkingAreaInMemoryList = this.parkingAreas.stream().collect(Collectors.toList());
         this.queueLength.set(this.memberRequests.length());
         this.makeParkingAreas(p -> true);
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
@@ -183,7 +182,7 @@ public class MainController implements Initializable {
 
     private void makeParkingAreas(Predicate<ParkingArea> predicate) {
         this.parkingAreaFlowPane.getChildren().clear();
-        this.parkingAreas.stream().filter(predicate).forEach(x -> {
+        this.parkingAreaInMemoryList.stream().filter(predicate).forEach(x -> {
             String image = Resource.Image.unlock;
 
             if (!x.isAvailable) {
@@ -211,9 +210,9 @@ public class MainController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(Resource.Ui.MEMBER_LAYOUT);
             AnchorPane contentNode = fxmlLoader.load();
             MemberParkingController memberParkingController = fxmlLoader.getController();
-            final ParkingArea parkingArea = this.parkingAreas.get(
-                    Integer.parseInt(parkingAreaImageView.getId())
-            ).get();
+            final ParkingArea parkingArea = this.parkingAreaInMemoryList.stream().
+                    filter(p -> p.id == Integer.parseInt(parkingAreaImageView.getId())).findFirst().get();
+            memberParkingController.setParkingAreaInMemoryList(this.parkingAreaInMemoryList);
             memberParkingController.setParkingArea(parkingArea);
             System.out.println("Selected ParkingArea = " + parkingArea);
             memberParkingController.setParkingAreaImageView(parkingAreaImageView);

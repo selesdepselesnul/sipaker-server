@@ -6,8 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.Manager.Resource;
@@ -40,6 +39,7 @@ public class MemberParkingController {
     final private MemberParkings memberParkings = new MemberParkingsKVStore(new KVStoreManager());
     private ImageView parkingAreaImageView;
     private ParkingArea parkingArea;
+    private List<ParkingArea> parkingAreaInMemoryList;
 
 
     private void init() {
@@ -86,7 +86,7 @@ public class MemberParkingController {
     }
 
     private void updateDatabase(boolean isAvailable) {
-        final ParkingArea parkingArea = new ParkingArea(
+        final ParkingArea parkingAreaNewData = new ParkingArea(
                 this.parkingArea.id,
                 isAvailable,
                 Integer.parseInt(memberIdTextField.getText()),
@@ -95,12 +95,15 @@ public class MemberParkingController {
                 checkOutTextField.getText()
         );
 
-        this.parkingAreasKVStore.store(parkingArea);
+        this.parkingAreaInMemoryList.removeIf(p -> p.id == parkingAreaNewData.id);
+        this.parkingAreaInMemoryList.add(parkingAreaNewData);
+        this.parkingAreaInMemoryList.sort((a, b) -> Integer.compare(a.id, b.id));
+        this.parkingAreasKVStore.store(parkingAreaNewData);
 
         if(checkOutTextField.getText().equals(""))
-            this.memberParkings.store(parkingArea.memberParking);
+            this.memberParkings.store(parkingAreaNewData.memberParking);
         else
-            this.memberParkings.update(parkingArea.memberParking);
+            this.memberParkings.update(parkingAreaNewData.memberParking);
     }
 
     public void setParkingAreaImageView(ImageView parkingAreaImageView) {
@@ -110,5 +113,9 @@ public class MemberParkingController {
 
     public void setParkingArea(ParkingArea parkingArea) {
         this.parkingArea = parkingArea;
+    }
+
+    public void setParkingAreaInMemoryList(List<ParkingArea> parkingAreaInMemoryList) {
+        this.parkingAreaInMemoryList = parkingAreaInMemoryList;
     }
 }
