@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
-public class MemberParkingsKVStore implements MemberParkings {
+public class MemberParkingsKVStore {
 
     private static final String COLLECTION_NAME = "MemberParkings";
     private static final String ITEM_NAME = "MemberParking";
@@ -17,46 +17,55 @@ public class MemberParkingsKVStore implements MemberParkings {
         this.kvStoreManager = kvStoreManager;
 
     }
-    public void init() {
-        kvStoreManager.createCollection(COLLECTION_NAME);
-        kvStoreManager.storeValue(COLLECTION_NAME, "length", "0");
+
+    public boolean makeEmptyCollection() {
+        return kvStoreManager.createCollection(COLLECTION_NAME)
+                &&
+                kvStoreManager.storeValue(COLLECTION_NAME, "length", "0");
     }
 
-    @Override
+    /**
+     *
+     * @return -1 if collection isn't created
+     */
     public int length() {
-        return Integer.parseInt(kvStoreManager.getValue(COLLECTION_NAME, "length").get());
+        return Integer.parseInt(kvStoreManager.getValue(COLLECTION_NAME, "length").orElse("-1"));
     }
 
-    @Override
-    public void update(MemberParking memberParking) {
+    public boolean update(MemberParking memberParking) {
         final int length = length();
-        storeMemberParking(ITEM_NAME + length, memberParking, length);
+        return storeMemberParking(ITEM_NAME + length, memberParking, length);
     }
 
-    @Override
-    public void store(MemberParking memberParking) {
+    public boolean store(MemberParking memberParking) {
         final int nextLength = length() + 1;
         final String memberParkingItem = ITEM_NAME + nextLength;
-        storeMemberParking(memberParkingItem, memberParking, nextLength);
+        return storeMemberParking(memberParkingItem, memberParking, nextLength);
     }
 
-    private void storeMemberParking(String collectionName, MemberParking memberParking, int length) {
-        kvStoreManager.createCollection(collectionName);
-        kvStoreManager.storeValue(collectionName, "parkingAreaId", String.valueOf(memberParking.parkingAreaId));
-        kvStoreManager.storeValue(collectionName, "memberId", String.valueOf(memberParking.memberId));
-        kvStoreManager.storeValue(collectionName, "policeNumber", memberParking.policeNumber);
-        kvStoreManager.storeValue(collectionName, "checkIn", memberParking.checkIn);
-        kvStoreManager.storeValue(collectionName, "checkOut", memberParking.checkOut);
+    private boolean storeMemberParking(String collectionName, MemberParking memberParking, int length) {
 
-        kvStoreManager.createCollection(COLLECTION_NAME);
-        kvStoreManager.storeValue(COLLECTION_NAME, "length", String.valueOf(length));
+        return kvStoreManager.createCollection(collectionName)
+                &&
+                kvStoreManager.storeValue(collectionName, "parkingAreaId", String.valueOf(memberParking.parkingAreaId))
+                &&
+                kvStoreManager.storeValue(collectionName, "memberId", String.valueOf(memberParking.memberId))
+                &&
+                kvStoreManager.storeValue(collectionName, "policeNumber", memberParking.policeNumber)
+                &&
+                kvStoreManager.storeValue(collectionName, "checkIn", memberParking.checkIn)
+                &&
+                kvStoreManager.storeValue(collectionName, "checkOut", memberParking.checkOut)
+                &&
+                kvStoreManager.createCollection(COLLECTION_NAME)
+                &&
+                kvStoreManager.storeValue(COLLECTION_NAME, "length", String.valueOf(length));
 
     }
 
-    @Override
-    public void dropAll() {
+    public boolean dropCollection() {
         IntStream.rangeClosed(1, length()).forEachOrdered(i -> kvStoreManager.deleteCollection(ITEM_NAME + i));
-        kvStoreManager.deleteCollection(COLLECTION_NAME);
+        return kvStoreManager.deleteCollection(COLLECTION_NAME);
     }
 
 }

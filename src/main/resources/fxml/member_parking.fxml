@@ -5,19 +5,21 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="288.0" prefWidth="322.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="selesdepselesnul.sipakerserver.controller.MemberParkingController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="288.0"
+            prefWidth="322.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="selesdepselesnul.sipakerserver.controller.MemberParkingController">
     <children>
         <Group layoutX="27.0" layoutY="23.0">
             <children>
-                <Label layoutY="5.0" text="No. Anggota" />
-                <TextField fx:id="memberIdTextField" disable="true" layoutX="85.0" />
-                <Label layoutX="2.0" layoutY="57.0" text="Nopol" />
-                <TextField fx:id="policeNumberTextField" disable="true" layoutX="85.0" layoutY="52.0" />
-                <Label layoutX="3.0" layoutY="115.0" text="Masuk" />
-                <TextField fx:id="checkInTextField" disable="true" layoutX="85.0" layoutY="110.0" />
-                <Label layoutX="2.0" layoutY="168.0" text="Keluar" />
-                <TextField fx:id="checkOutTextField" disable="true" layoutX="85.0" layoutY="163.0" />
-                <Button fx:id="readyButton" layoutY="222.0" mnemonicParsing="false" text="Mulai" />
+                <Label layoutY="5.0" text="No. Anggota"/>
+                <TextField fx:id="memberIdTextField" disable="true" layoutX="85.0"/>
+                <Label layoutX="2.0" layoutY="57.0" text="Nopol"/>
+                <TextField fx:id="policeNumberTextField" disable="true" layoutX="85.0" layoutY="52.0"/>
+                <Label layoutX="3.0" layoutY="115.0" text="Masuk"/>
+                <TextField fx:id="checkInTextField" disable="true" layoutX="85.0" layoutY="110.0"/>
+                <Label layoutX="2.0" layoutY="168.0" text="Keluar"/>
+                <TextField fx:id="checkOutTextField" disable="true" layoutX="85.0" layoutY="163.0"/>
+                <Button fx:id="readyButton" layoutY="222.0" mnemonicParsing="false" text="Mulai"/>
             </children>
         </Group>
     </children>

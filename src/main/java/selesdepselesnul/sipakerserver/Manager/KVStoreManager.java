@@ -1,7 +1,5 @@
 package selesdepselesnul.sipakerserver.Manager;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -12,53 +10,55 @@ import java.util.Optional;
  */
 public class KVStoreManager {
 
-    public Optional<HttpResponse<JsonNode>> deleteCollection(String collectionName) {
-        try {
-            return Optional.of(Unirest.delete("https://kvstore.p.mashape.com/collections/" + collectionName)
-                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-                    .asJson());
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+    private static final String KV_STORE_URL = "https://kvstore.p.mashape.com/collections/";
+    private static final String X_MASHAPE_KEY_KEY = "X-Mashape-Key";
+    private static final String X_MASHAPE_KEY_VALUE = "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS";
+
+    @FunctionalInterface
+    interface UnirestRunnable {
+        void run() throws UnirestException;
     }
 
-    public Optional<HttpResponse<JsonNode>> createCollection(String collectionName) {
+    private boolean isItWork(UnirestRunnable unirestRunnable) {
         try {
-            return Optional.of(Unirest.post("https://kvstore.p.mashape.com/collections")
-                    .header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-                    .header("Content-Type", "application/json")
-                    .header("Accept", "application/json")
-                    .body("{\"collection\":\"" + collectionName + "\"}")
-                    .asJson());
+            unirestRunnable.run();
+            return true;
         } catch (UnirestException e) {
-            e.printStackTrace();
+            return false;
         }
-        return Optional.empty();
     }
 
-    public Optional<HttpResponse<JsonNode>> storeValue(String collectionName, String key, String value) {
-        try {
-            return Optional.of(Unirest.put("https://kvstore.p.mashape.com/collections/" + collectionName
-                    + "/items/" + key).header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
-                    .body(value)
-                    .asJson());
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-        return Optional.empty();
+
+    public boolean deleteCollection(String collectionName) {
+        return isItWork(() -> Unirest.delete(KV_STORE_URL + collectionName)
+                .header(X_MASHAPE_KEY_KEY, X_MASHAPE_KEY_VALUE)
+                .asJson());
+    }
+
+    public boolean createCollection(String collectionName) {
+        return isItWork(() -> Unirest.post(KV_STORE_URL)
+                .header(X_MASHAPE_KEY_KEY, X_MASHAPE_KEY_VALUE)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .body("{\"collection\":\"" + collectionName + "\"}")
+                .asJson());
+    }
+
+    public boolean storeValue(String collectionName, String key, String value) {
+        return isItWork(() -> Unirest.put(KV_STORE_URL + collectionName
+                + "/items/" + key).header(X_MASHAPE_KEY_KEY, X_MASHAPE_KEY_VALUE)
+                .body(value)
+                .asJson());
     }
 
     public Optional<String> getValue(String collectionName, String key) {
         try {
-            return Optional.of(Unirest.get("https://kvstore.p.mashape.com/collections/" + collectionName
-                    + "/items/" + key).header("X-Mashape-Key", "S60LBMB0ivmshGLcOVyPhT6KTFITp1jjiszjsnQpNmujBNVPuS")
+            return Optional.of(Unirest.get(KV_STORE_URL + collectionName
+                    + "/items/" + key).header(X_MASHAPE_KEY_KEY, X_MASHAPE_KEY_VALUE)
                     .asJson().getBody().getObject().getString("value"));
         } catch (UnirestException e) {
-            e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
-
 
 }

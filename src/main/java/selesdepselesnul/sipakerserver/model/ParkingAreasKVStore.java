@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
-public class ParkingAreasKVStore implements ParkingAreas {
+public class ParkingAreasKVStore {
     private static final String PARKING_AREAS_COLLECTION = "ParkingAreas";
     private static final String PARKING_AREA = "ParkingArea";
     private final KVStoreManager kvStoreManager;
@@ -18,88 +18,94 @@ public class ParkingAreasKVStore implements ParkingAreas {
         this.kvStoreManager = kvStoreManager;
     }
 
-    private void updateSize(int newSize) {
-        this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(newSize));
+    private boolean updateSize(int newSize) {
+        return this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(newSize));
     }
 
 
-    @Override
-    public void increase() {
+    public boolean increase() {
         final int nextSize = this.size() + 1;
-        createDefaultParkingArea(nextSize);
-        updateSize(nextSize);
+        return createDefaultParkingArea(nextSize)
+                &&
+                updateSize(nextSize);
     }
 
 
-    @Override
-    public void decrease() {
+    public boolean decrease() {
         final int currentSize = this.size();
-        this.kvStoreManager.deleteCollection(PARKING_AREA + currentSize);
-        updateSize(currentSize - 1);
+        return this.kvStoreManager.deleteCollection(PARKING_AREA + currentSize)
+                &&
+                updateSize(currentSize - 1);
     }
 
-    @Override
     public Optional<ParkingArea> get(int id) {
         final String parkingArea = PARKING_AREA + id;
-        return Optional.of(
-                new ParkingArea(
-                        id,
-                        Boolean.parseBoolean(this.kvStoreManager.getValue(parkingArea, "isAvailable").orElse("true")),
-                        Integer.valueOf(this.kvStoreManager.getValue(parkingArea, "memberId").orElse("")),
-                        this.kvStoreManager.getValue(parkingArea, "policeNumber").orElse(""),
-                        this.kvStoreManager.getValue(parkingArea, "checkIn").orElse(""),
-                        this.kvStoreManager.getValue(parkingArea, "checkOut").orElse(""))
-        );
+        if (this.kvStoreManager.getValue(parkingArea, "isAvailable").isPresent())
+            return Optional.of(
+                    new ParkingArea(
+                            id,
+                            Boolean.parseBoolean(this.kvStoreManager.getValue(parkingArea, "isAvailable").get()),
+                            Integer.valueOf(this.kvStoreManager.getValue(parkingArea, "memberId").get()),
+                            this.kvStoreManager.getValue(parkingArea, "policeNumber").get(),
+                            this.kvStoreManager.getValue(parkingArea, "checkIn").get(),
+                            this.kvStoreManager.getValue(parkingArea, "checkOut").get())
+            );
+        else
+            return Optional.empty();
     }
 
-    @Override
-    public Stream<ParkingArea> stream() {
-        return IntStream.rangeClosed(1, size()).mapToObj(i ->
-                new ParkingArea(
-                        i,
-                        Boolean.parseBoolean(this.kvStoreManager.getValue(PARKING_AREA + i, "isAvailable").orElse("true")),
-                        Integer.valueOf(this.kvStoreManager.getValue(PARKING_AREA + i, "memberId").orElse("")),
-                        this.kvStoreManager.getValue(PARKING_AREA + i, "policeNumber").orElse(""),
-                        this.kvStoreManager.getValue(PARKING_AREA + i, "checkIn").orElse(""),
-                        this.kvStoreManager.getValue(PARKING_AREA + i, "checkOut").orElse("")
-                ));
+    public Stream<Optional<ParkingArea>> stream() {
+        return IntStream.rangeClosed(1, size())
+                .mapToObj(
+                        i -> Optional.of(
+                                new ParkingArea(
+                                        i,
+                                        Boolean.parseBoolean(this.kvStoreManager.getValue(PARKING_AREA + i, "isAvailable").get()),
+                                        Integer.valueOf(this.kvStoreManager.getValue(PARKING_AREA + i, "memberId").get()),
+                                        this.kvStoreManager.getValue(PARKING_AREA + i, "policeNumber").get(),
+                                        this.kvStoreManager.getValue(PARKING_AREA + i, "checkIn").get(),
+                                        this.kvStoreManager.getValue(PARKING_AREA + i, "checkOut").get()
+                                )));
     }
 
-    @Override
     public int size() {
         return Integer.valueOf(this.kvStoreManager.getValue(PARKING_AREAS_COLLECTION, "size").orElse("-1"));
     }
 
-    @Override
-    public void create(int size) {
+    public boolean create(int size) {
         IntStream.rangeClosed(1, size).forEachOrdered(this::createDefaultParkingArea);
-        this.kvStoreManager.createCollection(PARKING_AREAS_COLLECTION);
-        this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(size));
+        return this.kvStoreManager.createCollection(PARKING_AREAS_COLLECTION)
+                &&
+                this.kvStoreManager.storeValue(PARKING_AREAS_COLLECTION, "size", String.valueOf(size));
     }
 
-    private void createDefaultParkingArea(int id) {
-        store(new ParkingArea(id, true, -1, "", "", ""));
+    private boolean createDefaultParkingArea(int id) {
+        return store(new ParkingArea(id, true, -1, "", "", ""));
     }
 
-    public void store(ParkingArea parkingArea) {
+    public boolean store(ParkingArea parkingArea) {
         final String parkingAreaNumber = PARKING_AREA + parkingArea.id;
-        this.kvStoreManager.createCollection(parkingAreaNumber);
-        this.kvStoreManager.storeValue(parkingAreaNumber, "id", String.valueOf(parkingArea.id));
-        this.kvStoreManager.storeValue(parkingAreaNumber, "isAvailable", String.valueOf(parkingArea.isAvailable));
-        this.kvStoreManager.storeValue(parkingAreaNumber, "memberId", String.valueOf(parkingArea.memberParking.memberId));
-        this.kvStoreManager.storeValue(parkingAreaNumber, "policeNumber", parkingArea.memberParking.policeNumber);
-        this.kvStoreManager.storeValue(parkingAreaNumber, "checkIn", parkingArea.memberParking.checkIn);
-        this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.memberParking.checkOut);
+        return this.kvStoreManager.createCollection(parkingAreaNumber)
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "id", String.valueOf(parkingArea.id))
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "isAvailable", String.valueOf(parkingArea.isAvailable))
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "memberId", String.valueOf(parkingArea.memberParking.memberId))
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "policeNumber", parkingArea.memberParking.policeNumber)
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "checkIn", parkingArea.memberParking.checkIn)
+                &&
+                this.kvStoreManager.storeValue(parkingAreaNumber, "checkOut", parkingArea.memberParking.checkOut);
     }
 
-    @Override
-    public void dropAll() {
+    public boolean dropCollection() {
         IntStream.rangeClosed(1, size()).forEachOrdered(i -> kvStoreManager.deleteCollection(PARKING_AREA + i));
-        this.kvStoreManager.deleteCollection(PARKING_AREAS_COLLECTION);
+        return this.kvStoreManager.deleteCollection(PARKING_AREAS_COLLECTION);
     }
 
-    @Override
-    public void update(ParkingArea parkingArea) {
-        store(parkingArea);
+    public boolean update(ParkingArea parkingArea) {
+        return store(parkingArea);
     }
 }

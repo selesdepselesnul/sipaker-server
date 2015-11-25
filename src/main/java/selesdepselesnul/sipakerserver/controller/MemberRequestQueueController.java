@@ -1,5 +1,6 @@
 package selesdepselesnul.sipakerserver.controller;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -43,30 +44,27 @@ public class MemberRequestQueueController {
     private Stream<ParkingArea> parkingAreasStream;
     private List<ImageView> parkingAreaImageViews;
     private AtomicInteger queueLength;
+    final private static KVStoreManager kvStoreManager = new KVStoreManager();
 
     private void init() {
         this.parkingAreaNumberComboBox.getItems().setAll(
                 parkingAreasStream.collect(Collectors.toList()));
 
-        this.queueNumberTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("queueNumber"));
-        this.memberIdTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, Integer>("memberId"));
-        this.policeNumberTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, String>("policeNumber"));
-        this.requestTimeTableColumn.setCellValueFactory(new PropertyValueFactory<MemberRequest, String>("requestTime"));
-
-        this.memberRequestTableView.getColumns().setAll(queueNumberTableColumn, memberIdTableColumn,
-                policeNumberTableColumn, requestTimeTableColumn);
+        makeMemberRequestTable();
 
         this.memberRequestTableView.getItems().addAll(
-               new MemberRequestsKVStore(new KVStoreManager()).stream().collect(Collectors.toList())
+                new MemberRequestsKVStore(
+                        new KVStoreManager()).stream()
+                        .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList())
         );
 
-        this.parkingAreaNumberComboBox.setOnAction(e -> {
-            ParkingArea selectedParkingArea = parkingAreaNumberComboBox.getSelectionModel().getSelectedItem();
+        this.parkingAreaNumberComboBox.setOnAction(__ -> {
+            final ParkingArea selectedParkingArea = parkingAreaNumberComboBox.getSelectionModel().getSelectedItem();
             this.parkingAreaImageViews.stream()
                     .filter(p -> Integer.parseInt(p.getId()) == selectedParkingArea.id)
                     .forEach(x -> x.setImage(new Image(Resource.Image.lock)));
-            MemberRequest selectedMemberRequest = this.memberRequestTableView.getItems().remove(0);
-            ParkingArea parkingArea = new ParkingArea(
+            final MemberRequest selectedMemberRequest = this.memberRequestTableView.getItems().remove(0);
+            final ParkingArea parkingArea = new ParkingArea(
                     selectedParkingArea.id,
                     false,
                     selectedMemberRequest.getMemberId(),
@@ -74,11 +72,21 @@ public class MemberRequestQueueController {
                     TimeString.now(),
                     ""
             );
-            new ParkingAreasKVStore(new KVStoreManager()).store(parkingArea);
-            new MemberParkingsKVStore(new KVStoreManager()).store(parkingArea.memberParking);
-            new MemberRequestsKVStore(new KVStoreManager()).dequeu();
+            new ParkingAreasKVStore(kvStoreManager).store(parkingArea);
+            new MemberParkingsKVStore(kvStoreManager).store(parkingArea.memberParking);
+            new MemberRequestsKVStore(kvStoreManager).dequeu();
             this.queueLength.decrementAndGet();
         });
+    }
+
+    private void makeMemberRequestTable() {
+        this.queueNumberTableColumn.setCellValueFactory(new PropertyValueFactory<>("queueNumber"));
+        this.memberIdTableColumn.setCellValueFactory(new PropertyValueFactory<>("memberId"));
+        this.policeNumberTableColumn.setCellValueFactory(new PropertyValueFactory<>("policeNumber"));
+        this.requestTimeTableColumn.setCellValueFactory(new PropertyValueFactory<>("requestTime"));
+
+        this.memberRequestTableView.getColumns().setAll(queueNumberTableColumn, memberIdTableColumn,
+                policeNumberTableColumn, requestTimeTableColumn);
     }
 
     public void setParkingAreasStream(Stream<ParkingArea> parkingAreasStream) {

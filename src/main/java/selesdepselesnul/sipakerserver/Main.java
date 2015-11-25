@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import selesdepselesnul.sipakerserver.Manager.Resource;
 
 import java.io.IOException;
+
 /**
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
@@ -21,8 +22,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader mainLayoutLoader = new FXMLLoader(Resource.Ui.MAIN_LAYOUT);
-            GridPane mainLayout = mainLayoutLoader.load();
+            final FXMLLoader mainLayoutLoader = new FXMLLoader(Resource.Ui.MAIN_LAYOUT);
+            final GridPane mainLayout = mainLayoutLoader.load();
             primaryStage.setTitle("Sipaker - Server -");
             primaryStage.setScene(new Scene(mainLayout));
             primaryStage.show();

@@ -4,44 +4,48 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="selesdepselesnul.sipakerserver.controller.MainController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="326.0"
+          prefWidth="599.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="selesdepselesnul.sipakerserver.controller.MainController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="334.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="10.0" prefWidth="109.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="10.0" prefWidth="107.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="334.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="143.0" minWidth="10.0" prefWidth="109.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="247.0" minHeight="10.0" prefHeight="190.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="68.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="247.0" minHeight="10.0" prefHeight="190.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="127.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
         <ScrollPane prefHeight="196.0" prefWidth="334.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <content>
-                <FlowPane fx:id="parkingAreaFlowPane" />
+                <FlowPane fx:id="parkingAreaFlowPane"/>
             </content>
         </ScrollPane>
-      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-         <children>
-            <Button fx:id="increasingParkingSizeButton" mnemonicParsing="false" text="+" />
-            <Button fx:id="decreasingParkingSizeButton" mnemonicParsing="false" text="-" />
-            <ComboBox fx:id="displayedParkingAreasModeComboBox" prefHeight="26.0" prefWidth="331.0" />
-         </children>
-      </HBox>
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="179.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="155.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <ComboBox fx:id="filteringByPatternComboBox" prefHeight="26.0" prefWidth="170.0" visible="false" GridPane.columnIndex="1" />
-            <TextField fx:id="patternTextField" prefHeight="26.0" prefWidth="178.0" visible="false" />
-         </children>
-      </GridPane>
-      <Button fx:id="memberRequestQueueButton" mnemonicParsing="false" text="antrian req anggota" GridPane.columnIndex="1" />
+        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <Button fx:id="increasingParkingSizeButton" mnemonicParsing="false" text="+"/>
+                <Button fx:id="decreasingParkingSizeButton" mnemonicParsing="false" text="-"/>
+                <ComboBox fx:id="displayedParkingAreasModeComboBox" prefHeight="26.0" prefWidth="331.0"/>
+            </children>
+        </HBox>
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="179.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="155.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <ComboBox fx:id="filteringByPatternComboBox" prefHeight="26.0" prefWidth="170.0" visible="false"
+                          GridPane.columnIndex="1"/>
+                <TextField fx:id="patternTextField" prefHeight="26.0" prefWidth="178.0" visible="false"/>
+            </children>
+        </GridPane>
+        <Button fx:id="memberRequestQueueButton" mnemonicParsing="false" text="antrian req anggota"
+                GridPane.columnIndex="1"/>
     </children>
 </GridPane>

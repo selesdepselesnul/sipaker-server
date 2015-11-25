@@ -8,10 +8,10 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class MemberRequest {
 
-    private SimpleIntegerProperty queueNumber;
-    private SimpleIntegerProperty memberId;
-    private SimpleStringProperty policeNumber;
-    private SimpleStringProperty requestTime;
+    final private SimpleIntegerProperty queueNumber;
+    final private SimpleIntegerProperty memberId;
+    final private SimpleStringProperty policeNumber;
+    final private SimpleStringProperty requestTime;
 
     public MemberRequest(int queueNumber, int memberId, String policeNumber, String requestTime) {
         this.queueNumber = new SimpleIntegerProperty(queueNumber);
@@ -31,7 +31,6 @@ public class MemberRequest {
     public int getMemberId() {
         return memberId.get();
     }
-
 
     public String getRequestTime() {
         return requestTime.get();

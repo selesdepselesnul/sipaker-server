@@ -11,14 +11,7 @@ public class ParkingArea {
     public ParkingArea(int id, boolean isAvailable, int memberId, String policeNumber, String checkIn, String checkOut) {
         this.id = id;
         this.isAvailable = isAvailable;
-        this.memberParking = new MemberParking(
-                -1,
-                memberId,
-                id,
-                policeNumber,
-                checkIn,
-                checkOut
-        );
+        this.memberParking = new MemberParking(-1, memberId, id, policeNumber, checkIn, checkOut);
     }
 
     @Override

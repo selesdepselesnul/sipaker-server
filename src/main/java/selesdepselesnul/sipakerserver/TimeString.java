@@ -9,6 +9,10 @@ import java.time.format.DateTimeFormatter;
 public class TimeString {
     public static final DateTimeFormatter INDONESIAN_D_T_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
 
+    /**
+     *
+     * @return current LocalDateTime in String with Indonesian Format
+     */
     public static String now() {
         return LocalDateTime.now().format(INDONESIAN_D_T_FORMATTER);
     }

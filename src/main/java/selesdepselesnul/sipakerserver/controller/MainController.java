@@ -52,10 +52,12 @@ public class MainController implements Initializable {
     @FXML
     private Button memberRequestQueueButton;
 
+    final private KVStoreManager kvStoreManager = new KVStoreManager();
+
     private AtomicInteger queueLength = new AtomicInteger();
 
-    final private ParkingAreas parkingAreas = new ParkingAreasKVStore(new KVStoreManager());
-    final private MemberRequests memberRequests = new MemberRequestsKVStore(new KVStoreManager());
+    final private ParkingAreasKVStore parkingAreas = new ParkingAreasKVStore(this.kvStoreManager);
+    final private MemberRequestsKVStore memberRequests = new MemberRequestsKVStore(this.kvStoreManager);
     private List<ParkingArea> parkingAreaInMemoryList;
 
     @Override
@@ -119,17 +121,20 @@ public class MainController implements Initializable {
     }
 
     private void init() {
-        this.parkingAreaInMemoryList = this.parkingAreas.stream().collect(Collectors.toList());
+        generateParkingAreasFromKVStore();
         this.queueLength.set(this.memberRequests.length());
         this.makeParkingAreas(p -> true);
+
         final DisplayAllParkingAreas displayAllParkingAreas = new DisplayAllParkingAreas();
         this.displayedParkingAreasModeComboBox.getItems().setAll(
                 displayAllParkingAreas, new DisplayAvailable(), new DisplayNotAvailable(), new FilteringByPattern());
+
         this.displayedParkingAreasModeComboBox.setValue(displayAllParkingAreas);
         this.displayedParkingAreasModeComboBox.setOnAction(
                 e -> displayedParkingAreasModeComboBox.getSelectionModel().getSelectedItem().run());
         Consumer<Runnable> updateSize = x -> {
             x.run();
+            generateParkingAreasFromKVStore();
             makeParkingAreas(p -> true);
         };
         this.increasingParkingSizeButton.setOnAction(e -> updateSize.accept(() -> this.parkingAreas.increase()));
@@ -147,7 +152,7 @@ public class MainController implements Initializable {
                             ImageView parkingAreaImageView = (ImageView) vBox.getChildren().get(0);
                             return parkingAreaImageView;
                         }).collect(Collectors.toList()));
-                memberRequestQueueController.setParkingAreasStream(parkingAreas.stream().filter(p -> p.isAvailable));
+                memberRequestQueueController.setParkingAreasStream(parkingAreaInMemoryList.stream().filter(p -> p.isAvailable));
                 popOver.setContentNode(memberRequestQueueLayout);
                 popOver.show(memberRequestQueueButton);
             } catch (IOException e1) {
@@ -156,23 +161,29 @@ public class MainController implements Initializable {
         });
 
         Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> {
-                            if (queueLength.get() != memberRequests.length())  {
-                                Notifications.create()
-                                        .title("Informasi")
-                                        .text("Ada antrian baru!")
-                                        .darkStyle()
-                                        .show();
-                                queueLength.set(memberRequests.length());
-                            }
+        timer.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> {
+                                    if (queueLength.get() != memberRequests.length()) {
+                                        Notifications.create()
+                                                .title("Informasi")
+                                                .text("Ada antrian baru!")
+                                                .darkStyle()
+                                                .show();
+                                        queueLength.set(memberRequests.length());
+                                    }
 
-                        }
-                );
-            }
-        }, 1000l, 1000l);
+                                }
+                        );
+                    }
+                }, 1000l, 1000l);
+    }
+
+    private void generateParkingAreasFromKVStore() {
+        this.parkingAreaInMemoryList = this.parkingAreas.stream()
+                .filter(p -> p.isPresent()).map(Optional::get).collect(Collectors.toList());
     }
 
     private void setVisibleFilteringByPattern(boolean isVisible) {
@@ -185,9 +196,8 @@ public class MainController implements Initializable {
         this.parkingAreaInMemoryList.stream().filter(predicate).forEach(x -> {
             String image = Resource.Image.unlock;
 
-            if (!x.isAvailable) {
+            if (!x.isAvailable)
                 image = Resource.Image.lock;
-            }
 
             final Text parkingAreaIdText = new Text(String.valueOf(x.id));
             parkingAreaIdText.setCursor(Cursor.CLOSED_HAND);

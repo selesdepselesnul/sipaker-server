@@ -11,7 +11,6 @@ import java.util.List;
 import selesdepselesnul.sipakerserver.Manager.KVStoreManager;
 import selesdepselesnul.sipakerserver.Manager.Resource;
 import selesdepselesnul.sipakerserver.TimeString;
-import selesdepselesnul.sipakerserver.model.MemberParkings;
 import selesdepselesnul.sipakerserver.model.ParkingArea;
 import selesdepselesnul.sipakerserver.model.ParkingAreasKVStore;
 import selesdepselesnul.sipakerserver.model.MemberParkingsKVStore;
@@ -20,6 +19,7 @@ import selesdepselesnul.sipakerserver.model.MemberParkingsKVStore;
  * @author Moch Deden (https://github.com/selesdepselesnul)
  */
 public class MemberParkingController {
+
     @FXML
     private TextField memberIdTextField;
 
@@ -35,37 +35,43 @@ public class MemberParkingController {
     @FXML
     private Button readyButton;
 
-    final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(new KVStoreManager());
-    final private MemberParkings memberParkings = new MemberParkingsKVStore(new KVStoreManager());
     private ImageView parkingAreaImageView;
     private ParkingArea parkingArea;
     private List<ParkingArea> parkingAreaInMemoryList;
+
+    private static final String READY = "Mulai";
+    private static final String START = "Simpan";
+    private static final String FINISHED = "Selesai";
+
+    static final private KVStoreManager kvStoreManager = new KVStoreManager();
+    static final private ParkingAreasKVStore parkingAreasKVStore = new ParkingAreasKVStore(kvStoreManager);
+    static final private MemberParkingsKVStore memberParkings = new MemberParkingsKVStore(kvStoreManager);
 
 
     private void init() {
         checkAvailability();
         initForm();
-        readyButton.setOnAction(actionEvent -> {
-            Button button = (Button) actionEvent.getSource();
-            if (button.getText().equals("Mulai")) {
+        readyButton.setOnAction(e -> {
+            Button button = (Button) e.getSource();
+            if (button.getText().equals(READY)) {
                 checkInTextField.setDisable(false);
                 checkInTextField.setText(TimeString.now());
                 checkInTextField.setDisable(true);
                 memberIdTextField.setDisable(false);
                 policeNumberTextField.setDisable(false);
-                readyButton.setText("Simpan");
-            } else if (readyButton.getText().equals("Simpan")) {
+                readyButton.setText(START);
+            } else if (readyButton.getText().equals(START)) {
                 memberIdTextField.setDisable(true);
                 policeNumberTextField.setDisable(true);
-                readyButton.setText("Selesai");
+                readyButton.setText(FINISHED);
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.lock));
                 this.checkOutTextField.clear();
-                updateDatabase(false);
+                updateDatabaseWithAvailability(false);
             } else {
                 checkOutTextField.setText(TimeString.now());
                 this.parkingAreaImageView.setImage(new Image(Resource.Image.unlock));
-                readyButton.setText("Mulai");
-                updateDatabase(true);
+                readyButton.setText(READY);
+                updateDatabaseWithAvailability(true);
             }
         });
     }
@@ -78,14 +84,13 @@ public class MemberParkingController {
     }
 
     private void checkAvailability() {
-        if (this.parkingArea.isAvailable) {
-            this.readyButton.setText("Mulai");
-        } else {
-            this.readyButton.setText("Selesai");
-        }
+        if (this.parkingArea.isAvailable)
+            this.readyButton.setText(READY);
+        else
+            this.readyButton.setText(FINISHED);
     }
 
-    private void updateDatabase(boolean isAvailable) {
+    private void updateDatabaseWithAvailability(boolean isAvailable) {
         final ParkingArea parkingAreaNewData = new ParkingArea(
                 this.parkingArea.id,
                 isAvailable,
@@ -100,7 +105,7 @@ public class MemberParkingController {
         this.parkingAreaInMemoryList.sort((a, b) -> Integer.compare(a.id, b.id));
         this.parkingAreasKVStore.store(parkingAreaNewData);
 
-        if(checkOutTextField.getText().equals(""))
+        if (checkOutTextField.getText().equals(""))
             this.memberParkings.store(parkingAreaNewData.memberParking);
         else
             this.memberParkings.update(parkingAreaNewData.memberParking);
